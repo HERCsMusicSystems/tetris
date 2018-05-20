@@ -1,0 +1,110 @@
+<!--
+///////////////////////////////////////////////////////////////////////////////////
+//                     Copyright (C) 2018 Dr Robert P. Wolf                      //
+//                                                                               //
+// Permission is hereby granted, free of charge, to any person obtaining a copy  //
+// of this software and associated documentation files (the "Software"), to deal //
+// in the Software without restriction, including without limitation the rights  //
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell     //
+// copies of the Software, and to permit persons to whom the Software is         //
+// furnished to do so, subject to the following conditions:                      //
+//                                                                               //
+// The above copyright notice and this permission notice shall be included in    //
+// all copies or substantial portions of the Software.                           //
+//                                                                               //
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR    //
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,      //
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE   //
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER        //
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, //
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN     //
+// THE SOFTWARE.                                                                 //
+///////////////////////////////////////////////////////////////////////////////////
+
+-->
+
+<html>
+
+<head>
+	<title>TETRIS 3D</title>
+</head>
+
+<body bgcolor=black style = "margin: 0;" >
+	<div>
+		<canvas id=tetris />
+	</div>
+</body>
+
+<script>
+
+var context3d = function (canvas) {
+	var ctx = canvas . getContext ('2d');
+	ctx . screen = 600.0;
+	ctx . moveto = function (x, y, z) {
+		z += ctx . screen;
+		var scz = ctx . screen / z;
+		ctx . moveTo (x * scz, y * scz);
+	};
+	ctx . lineto = function (x, y, z) {
+		z += ctx . screen;
+		var scz = ctx . screen / z;
+		ctx . lineTo (x * scz, y * scz);
+	};
+	return ctx;
+};
+
+var canvas = document . getElementById ('tetris');
+var ctx = context3d (canvas);
+
+var Well = function () {
+	this . dimensions = {width: 6, height: 4, depth: 6, side: 40};
+	this . reSide = function (width, height) {
+		this . dimensions . side = Math . min (width / this . dimensions . width * 0.96, height / this . dimensions . height * 0.96);
+	}
+	this . draw = function (ctx, width, height) {
+		ctx . clearRect (0, 0, width, height);
+		ctx . strokeStyle = '#44ff44';
+		ctx . resetTransform ();
+		ctx . lineWidth = 1;
+		ctx . translate (width * 0.5, height * 0.5);
+		ctx . beginPath ();
+		var right = this . dimensions . width * 0.5 * this . dimensions . side, left = - right;
+		var bottom = this . dimensions . height * 0.5 * this . dimensions . side, top = - bottom;
+		var depth = this . dimensions . depth * this . dimensions . side;
+		for (var y = 1; y < this . dimensions . height; y++) {
+			var yy = top + this . dimensions . side * y;
+			ctx . moveto (left, yy, 0); ctx . lineto (left, yy, depth); ctx . lineto (right, yy, depth); ctx . lineto (right, yy, 0);
+		}
+		for (var x = 1; x < this . dimensions . width; x++) {
+			var xx = left + this . dimensions . side * x;
+			ctx . moveto (xx, top, 0); ctx . lineto (xx, top, depth); ctx . lineto (xx, bottom, depth); ctx . lineto (xx, bottom, 0);
+		}
+		for (var z = 0; z <= this . dimensions . depth; z++) {
+			var zz = this . dimensions . side * z;
+			ctx . moveto (left, top, zz); ctx . lineto (right, top, zz); ctx . lineto (right, bottom, zz); ctx . lineto (left, bottom, zz); ctx . lineto (left, top, zz);
+		}
+		ctx . moveto (left, top, 0); ctx . lineto (left, top, depth);
+		ctx . moveto (right, top, 0); ctx . lineto (right, top, depth);
+		ctx . moveto (right, bottom, 0); ctx . lineto (right, bottom, depth);
+		ctx . moveto (left, bottom, 0); ctx . lineto (left, bottom, depth);
+		ctx . stroke ();
+	}
+};
+
+var well = new Well ();
+
+var resize = function () {
+	canvas . width = window . innerWidth;
+	canvas . height = window . innerHeight;
+	well . reSide (window . innerWidth, window . innerHeight);
+	well . draw (ctx, window . innerWidth, window . innerHeight);
+};
+
+//setInterval (resize, 50);
+resize ();
+
+</script>
+
+
+</html>
+
