@@ -57,16 +57,32 @@ var canvas = document . getElementById ('tetris');
 var ctx = context3d (canvas);
 
 var Well = function () {
-	this . dimensions = {width: 6, height: 4, depth: 6, side: 40};
+	this . dimensions = {width: 7, height: 7, depth: 12, side: 40};
+	this . colours = ['blue', 'red', 'magenta', 'green', 'cyan', 'yellow', 'white', 'orange', 'blue', 'red', 'magenta', 'red', 'yellow', 'cyan'];
+	this . content = [];
+	this . initialiseContent = function () {
+		this . content = [];
+		for (var z = 0; z < this . dimensions . depth; z++) {
+			var layer = []; this . content . push (layer);
+			for (var x = 0; x < this . dimensions . width; x++) {
+				var column = []; layer . push (column);
+				for (var y = 0; y < this . dimensions . height; y++) {
+					column . push (false);
+				}
+			}
+		}
+	};
+	this . initialiseContent ();
+	this . insertRandomBlock = function () {
+		this . content [Math . floor (this . dimensions . depth * Math . random ())]
+						[Math . floor (this . dimensions . width * Math . random ())]
+						[Math . floor (this . dimensions . height * Math . random ())] = true;
+	};
+	for (var ind = 0; ind < 4; ind++) this . insertRandomBlock ();
 	this . reSide = function (width, height) {
 		this . dimensions . side = Math . min (width / this . dimensions . width * 0.96, height / this . dimensions . height * 0.96);
-	}
-	this . draw = function (ctx, width, height) {
-		ctx . clearRect (0, 0, width, height);
-		ctx . strokeStyle = '#44ff44';
-		ctx . resetTransform ();
-		ctx . lineWidth = 1;
-		ctx . translate (width * 0.5, height * 0.5);
+	};
+	this . drawWell = function (ctx) {
 		ctx . beginPath ();
 		var right = this . dimensions . width * 0.5 * this . dimensions . side, left = - right;
 		var bottom = this . dimensions . height * 0.5 * this . dimensions . side, top = - bottom;
@@ -88,6 +104,55 @@ var Well = function () {
 		ctx . moveto (right, bottom, 0); ctx . lineto (right, bottom, depth);
 		ctx . moveto (left, bottom, 0); ctx . lineto (left, bottom, depth);
 		ctx . stroke ();
+	};
+	this . drawContent = function (ctx) {
+		var side = this . dimensions . side;
+		var left = -0.5 * this . dimensions . width * side;
+		var top = -0.5 * this . dimensions . height * side;
+		for (var layer = this . dimensions . depth - 1; layer >= 0; layer--) {
+			ctx . fillStyle = this . colours [layer];
+			var depth = layer * side;
+			for (var x = 0; x < this . dimensions . width; x++) {
+				for (var y = 0; y < this . dimensions . height; y++) {
+					if (this . content [layer] [x] [y]) {
+						var a = left + side * x, b = a + side, c = top + side * y, d = c + side, dd = depth + side;
+						ctx . beginPath ();
+						ctx . moveto (a, c, depth), ctx . lineto (b, c, depth); ctx . lineto (b, d, depth); ctx . lineto (a, d, depth), ctx . closePath ();
+						ctx . fill ();
+						ctx . stroke ();
+						if (y > this . dimensions . height * 0.5) {
+							ctx . beginPath ();
+							ctx . moveto (a, c, depth), ctx . lineto (a, c, dd); ctx . lineto (b, c, dd); ctx . lineto (b, c, depth);
+							ctx . fill ();
+						}
+						if (y + 1 < this . dimensions . height * 0.5) {
+							ctx . beginPath ();
+							ctx . moveto (b, d, depth), ctx . lineto (b, d, dd); ctx . lineto (a, d, dd); ctx . lineto (a, d, depth);
+							ctx . fill ();
+						}
+						if (x > this . dimensions . width * 0.5) {
+							ctx . beginPath ();
+							ctx . moveto (a, c, depth), ctx . lineto (a, c, dd); ctx . lineto (a, d, dd); ctx . lineto (a, d, depth);
+							ctx . fill ();
+						}
+						if (x + 1 < this . dimensions . width * 0.5) {
+							ctx . beginPath ();
+							ctx . moveto (b, c, depth), ctx . lineto (b, c, dd); ctx . lineto (b, d, dd); ctx . lineto (b, d, depth);
+							ctx . fill ();
+						}
+					}
+				}
+			}
+		}
+	};
+	this . draw = function (ctx, width, height) {
+		ctx . clearRect (0, 0, width, height);
+		ctx . strokeStyle = '#44ff44';
+		ctx . resetTransform ();
+		ctx . lineWidth = 1;
+		ctx . translate (width * 0.5, height * 0.5);
+		this . drawWell (ctx);
+		this . drawContent (ctx);
 	}
 };
 
