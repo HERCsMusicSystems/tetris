@@ -112,6 +112,49 @@ var context3d = function (canvas) {
 var canvas = document . getElementById ('tetris');
 var ctx = context3d (canvas);
 
+var angle = 0;
+
+var Block = function () {
+	this . location = {x: 0, y: 1, z: 1};
+	this . rotation = [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]];
+	this . draw = function (ctx, dims) {
+//		ctx . matrix = translate (m, this . location . x * dims, 0, 0);
+		//var x = dims . side * (this . location . x - dims . width * 0.5);
+		var x = 0, y = 0, z = 0;
+		//var y = dims . side * (this . location . y - dims . height * 0.5);
+		//var z = dims . side * this . location . z;
+		var s = dims . side;
+		var zs = z + s, zms= z - s, yms = y - s, ymss = y - s - s, xss = x + s + s; xsss = x + 3 * s;
+		var xs = x + s;
+		var m = ctx . matrix;
+		var mm = m;
+		mm = translate (mm, - s * (dims . width * 0.5 - this . location . x - 0.5),
+							s * (dims . height * 0.5 - this . location . y - 0.5), s * (this . location . z + 0.5));
+		//mm = rollz (mm, angle); angle += 0.01;
+		mm = mtm (this . rotation, mm);
+		mm = translate (mm, -1.5 * s, 0.5 * s, -0.5 * s);
+		ctx . matrix = mm;
+		ctx . strokeStyle = '#ff2222'; ctx . lineWidth = 2;
+		ctx . beginPath ();
+		ctx . moveto (x, y, z); ctx . lineto (xs, y, z); ctx . lineto (xs, y, zms); ctx . lineto (xss, y, zms);
+			ctx . lineto (xss, y, z); ctx . lineto (xsss, y, z); ctx . lineto (xsss, y, zs); ctx . lineto (x, y, zs); ctx . lineto (x, y, z);
+			ctx . lineto (x, ymss, z); ctx . lineto (xs, ymss, z), ctx . lineto (xs, y, z);
+		ctx . moveto (x, y, zs); ctx . lineto (x, ymss, zs); ctx . lineto (xs, ymss, zs), ctx . lineto (xs, yms, zs);
+			ctx . lineto (xsss, yms, zs); ctx . lineto (xsss, y, zs);
+		ctx . moveto (xsss, y, z); ctx . lineto (xsss, yms, z); ctx . lineto (xss, yms, z); ctx . lineto (xss, y, z);
+		ctx . moveto (xss, yms, z); ctx . lineto (xss, yms, zms); ctx . lineto (xss, y, zms);
+		ctx . moveto (xss, yms, zms); ctx . lineto (xs, yms, zms); ctx . lineto (xs, y, zms);
+		ctx . moveto (xs, yms, zms); ctx . lineto (xs, yms, zs);
+		ctx . moveto (x, ymss, z); ctx . lineto (x, ymss, zs);
+		ctx . moveto (xs, ymss, z); ctx . lineto (xs, ymss, zs);
+		ctx . moveto (xsss, yms, z); ctx . lineto (xsss, yms, zs);
+		ctx . stroke ();
+		ctx . matrix = m;
+	};
+};
+
+var block = new Block ();
+
 var Well = function () {
 	this . dimensions = {width: 7, height: 7, depth: 12, side: 40};
 	this . colours = ['blue', 'red', 'magenta', 'green', 'cyan', 'yellow', 'white', 'orange', 'blue', 'red', 'magenta', 'red', 'yellow', 'cyan'];
