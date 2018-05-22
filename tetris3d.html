@@ -37,19 +37,75 @@
 
 <script>
 
+var vtm = function (vector, matrix) {
+	var v = [];
+	for (var y = 0; y < matrix . length; y++) {
+		var vv = 0;
+		for (var x = 0; x < vector . length; x++) {
+			vv += vector [x] * matrix [y] [x];
+		}
+		v . push (vv);
+	}
+	return v;
+};
+
+var mtm = function (m1, m2) {
+	var m = [];
+	for (var y = 0; y < m2 . length; y++) {
+		var mm = []; m . push (mm);
+		for (var x = 0; x < m1 . length; x++) {
+			var value = 0.0;
+			for (var i = 0; i < m2 . length; i++) {
+				value += m1 [i] [x] * m2 [y] [i];
+			}
+			mm . push (value);
+		}
+	}
+	return m;
+};
+
+var rollz = function (m, angle) {
+	var sine = Math . sin (angle), cosine = Math . cos (angle);
+	return mtm ([[cosine, - sine, 0, 0], [sine, cosine, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]], m);
+};
+
+var rollx = function (m, angle) {
+	var sine = Math . sin (angle), cosine = Math . cos (angle);
+	return mtm ([[1, 0, 0, 0], [0, cosine, - sine, 0], [0, sine, cosine, 0], [0, 0, 0, 1]], m);
+};
+
+var rolly = function (m, angle) {
+	var sine = Math . sin (angle), cosine = Math . cos (angle);
+	return mtm ([[cosine, 0, - sine, 0], [0, 1, 0, 0], [sine, 0, cosine, 0], [0, 0, 0, 1]], m);
+};
+
+var translate = function (m, x, y, z) {return mtm ([[1, 0, 0, x], [0, 1, 0, y], [0, 0, 1, z], [0, 0, 0, 1]], m);};
+
 var context3d = function (canvas) {
 	var ctx = canvas . getContext ('2d');
 	ctx . screen = 600.0;
+	ctx . rollz = function (angle) {
+		var sine = Math . sin (angle), cosine = Math . cos (angle);
+		var m = [[cosine, - sine, 0, 0], [sine, cosine, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]];
+		ctx . matrix = mtm (m, ctx . matrix);
+	};
+	ctx . scale = function (scale) {
+		var m = [[scale, 0, 0, 0], [0, scale, 0, 0], [0, 0, scale, 0], [0, 0, 0, 1]];
+		ctx . matrix = mtm (ctx . matrix, m);
+	};
 	ctx . moveto = function (x, y, z) {
-		z += ctx . screen;
-		var scz = ctx . screen / z;
-		ctx . moveTo (x * scz, y * scz);
+		var v = vtm ([x, y, z, 1], ctx . matrix);
+		var scz = ctx . screen / (ctx . screen + v [2]);
+		ctx . moveTo (v [0] * scz, v [1] * scz);
 	};
 	ctx . lineto = function (x, y, z) {
-		z += ctx . screen;
-		var scz = ctx . screen / z;
-		ctx . lineTo (x * scz, y * scz);
+		var v = vtm ([x, y, z, 1], ctx . matrix);
+		var scz = ctx . screen / (ctx . screen + v [2]);
+		ctx . lineTo (v [0] * scz, v [1] * scz);
 	};
+	ctx . unity = function () {return [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]];}
+	ctx . reset_transform = function () {ctx . matrix = ctx . unity ();}
+	ctx . reset_transform ();
 	return ctx;
 };
 
