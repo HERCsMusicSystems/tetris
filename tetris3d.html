@@ -29,7 +29,7 @@
 	<title>TETRIS 3D</title>
 </head>
 
-<body bgcolor=black style = "margin: 0;" >
+<body bgcolor=black style = "margin: 0;" onkeypress="javascript: ctrl (event);" >
 	<div>
 		<canvas id=tetris />
 	</div>
@@ -262,10 +262,26 @@ var resize = function () {
 	canvas . height = window . innerHeight;
 	well . reSide (window . innerWidth, window . innerHeight);
 	well . draw (ctx, window . innerWidth, window . innerHeight);
+	block . draw (ctx, well . dimensions);
 };
 
 //setInterval (resize, 50);
 resize ();
+
+var ctrl = function (event) {
+	switch (event . key) {
+	case "ArrowRight": block . location . x += 1; break;
+	case "ArrowLeft": block . location . x -= 1; break;
+	case "ArrowUp": block . location . y += 1; break;
+	case "ArrowDown": block . location . y -= 1; break;
+	case "d": block . rotation = mtm (block . rotation, [[0, -1, 0, 0], [1, 0, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]); break;
+	case "e": block . rotation = mtm (block . rotation, [[0, 1, 0, 0], [-1, 0, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]); break;
+	case "s": block . rotation = mtm (block . rotation, [[1, 0, 0, 0], [0, 0, -1, 0], [0, 1, 0, 0], [0, 0, 0, 1]]); break;
+	case "w": block . rotation = mtm (block . rotation, [[1, 0, 0, 0], [0, 0, 1, 0], [0, -1, 0, 0], [0, 0, 0, 1]]); break;
+	default: break;
+	}
+	resize ();
+};
 
 </script>
 
