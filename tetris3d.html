@@ -117,6 +117,60 @@ var angle = 0;
 var Block = function () {
 	this . location = {x: 0, y: 1, z: 1};
 	this . rotation = [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]];
+	this . block = [[[false, false, false], [false, true, false], [false, false, false]],
+					[[true, false, false], [true, true, true], [false, false, false]],
+					[[false, false, false], [false, false, false], [false, false, false]]];
+	this . rotate_block = function () {
+		var block = [[[0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0]]];
+		for (var layer = 0; layer < 3; layer++) {
+			for (var row = 0; row < 3; row++) {
+				for (var el = 0; el < 3; el++) {
+					var v = vtm ([el - 1, row - 1, layer - 1, 1], this . rotation);
+					block [v [2] + 1] [v [1] + 1] [v [0] + 1] = this . block [layer] [row] [el];
+				}
+			}
+		}
+		return block;
+	};
+	this . clamp_right = function (dimensions, block) {
+		if (this . location . x + 2 > dimensions . height) {
+			for (var x = 0; x < 3; x++) {for (var y = 0; y < 3; y++) {if (block [x] [y] [2]) {this . location . x = dimensions . width - 2; return;}}}
+		}
+		if (this . location . x + 1 > dimensions . height) {
+			for (var x = 0; x < 3; x++) {for (var y = 0; y < 3; y++) {if (block [x] [y] [1]) {this . location . x = dimensions . width - 1; return;}}}
+		}
+		if (this . location . x > dimensions . height) this . location . x = dimensions . width;
+	};
+	this . move_right = function (dimensions) {this . location . x += 1; this . clamp_right (dimensions, this . rotate_block ());};
+	this . clamp_left = function (dimensions, block) {
+		if (this . location . x < 1) {for (var x = 0; x < 3; x++) {for (var y = 0; y < 3; y++) {if (block [x] [y] [0]) {this . location . x = 1; return;}}}}
+		if (this . location . x < 0) {for (var x = 0; x < 3; x++) {for (var y = 0; y < 3; y++) {if (block [x] [y] [1]) {this . location . x = 0; return;}}}}
+		if (this . location . x < -1) this . location = -1;
+	};
+	this . move_left = function (dimensions) {this . location . x -= 1; this . clamp_left (dimensions, this . rotate_block ());};
+	this . clamp_top = function (dimensions, block) {
+		if (this . location . y + 2 > dimensions . height) {
+			for (var x = 0; x < 3; x++) {for (var y = 0; y < 3; y++) {if (block [x] [0] [y]) {this . location . y = dimensions . height - 2; return;}}}
+		}
+		if (this . location . y + 1 > dimensions . height) {
+			for (var x = 0; x < 3; x++) {for (var y = 0; y < 3; y++) {if (block [x] [1] [y]) {this . location . y = dimensions . height - 1; return;}}}
+		}
+		if (this . location . y > dimensions . height) this . location . y = dimensions . height;
+	};
+	this . move_up = function (dimensions) {this . location . y += 1; this . clamp_top (dimensions, this . rotate_block ());};
+	this . clamp_bottom = function (dimensions, block) {
+		if (this . location . y < 1) {for (var x = 0; x < 3; x++) {for (var y = 0; y < 3; y++) {if (block [x] [2] [y]) {this . location . y = 1; return;}}}}
+		if (this . location . y < 0) {for (var x = 0; x < 3; x++) {for (var y = 0; y < 3; y++) {if (block [x] [1] [y]) {this . location . y = 0; return;}}}}
+		if (this . location . y < -1) this . location = -1;
+	};
+	this . move_down = function (dimensions) {this . location . y -= 1; this . clamp_bottom (dimensions, this . rotate_block ());};
+	this . clamp = function (dimensions, block) {
+		this . clamp_bottom (dimensions, block);
+		this . clamp_top (dimensions, block);
+		this . clamp_left (dimensions, block);
+		this . clamp_right (dimensions, block);
+	};
+	this . rotate = function (matrix, dimensions) {this . rotation = mtm (this . rotation, matrix); this . clamp (dimensions, this . rotate_block ());};
 	this . draw = function (ctx, dims) {
 //		ctx . matrix = translate (m, this . location . x * dims, 0, 0);
 		//var x = dims . side * (this . location . x - dims . width * 0.5);
@@ -270,14 +324,16 @@ resize ();
 
 var ctrl = function (event) {
 	switch (event . key) {
-	case "ArrowRight": block . location . x += 1; break;
-	case "ArrowLeft": block . location . x -= 1; break;
-	case "ArrowUp": block . location . y += 1; break;
-	case "ArrowDown": block . location . y -= 1; break;
-	case "d": block . rotation = mtm (block . rotation, [[0, -1, 0, 0], [1, 0, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]); break;
-	case "e": block . rotation = mtm (block . rotation, [[0, 1, 0, 0], [-1, 0, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]); break;
-	case "s": block . rotation = mtm (block . rotation, [[1, 0, 0, 0], [0, 0, -1, 0], [0, 1, 0, 0], [0, 0, 0, 1]]); break;
-	case "w": block . rotation = mtm (block . rotation, [[1, 0, 0, 0], [0, 0, 1, 0], [0, -1, 0, 0], [0, 0, 0, 1]]); break;
+	case "ArrowRight": block . move_right (well . dimensions); break;
+	case "ArrowLeft": block . move_left (well . dimensions); break;
+	case "ArrowUp": block . move_up (well . dimensions); break;
+	case "ArrowDown": block . move_down (well . dimensions); break;
+	case "d": block . rotate ([[0, -1, 0, 0], [1, 0, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]], well . dimensions); break;
+	case "e": block . rotate ([[0, 1, 0, 0], [-1, 0, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]], well . dimensions); break;
+	case "a": block . rotate ([[1, 0, 0, 0], [0, 0, -1, 0], [0, 1, 0, 0], [0, 0, 0, 1]], well . dimensions); break;
+	case "q": block . rotate ([[1, 0, 0, 0], [0, 0, 1, 0], [0, -1, 0, 0], [0, 0, 0, 1]], well . dimensions); break;
+	case "w": block . rotate ([[0, 0, -1, 0], [0, 1, 0, 0], [1, 0, 0, 0], [0, 0, 0, 1]], well . dimensions); break;
+	case "s": block . rotate ([[0, 0, 1, 0], [0, 1, 0, 0], [-1, 0, 0, 0], [0, 0, 0, 1]], well . dimensions); break;
 	default: break;
 	}
 	resize ();
