@@ -115,11 +115,8 @@ var ctx = context3d (canvas);
 var angle = 0;
 
 var Block = function () {
-	this . location = {x: 1, y: 1, z: 1};
+	this . location = {x: 1, y: 1, z: 0};
 	this . rotation = [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]];
-	this . block = [[[false, false, false], [false, true, false], [false, false, false]],
-					[[true, false, false], [true, true, true], [false, false, false]],
-					[[false, false, false], [false, false, false], [false, false, false]]];
 	this . rotate_block = function () {
 		var block = [[[0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0]]];
 		for (var layer = 0; layer < 3; layer++) {
@@ -171,9 +168,72 @@ var Block = function () {
 		this . clamp_right (dimensions, block);
 	};
 	this . rotate = function (matrix, dimensions) {this . rotation = mtm (this . rotation, matrix); this . clamp (dimensions, this . rotate_block ());};
-	this . addToWell = function (well) {
-		well . addBlock (this . location . x, this . location . y);	
+	this . level = function (well) {
+		var block = this . rotate_block ();
+		var lll = 16384;
+		for (var y = 0; y < 3; y++) {
+			for (var x = 0; x < 3; x++) {
+				var l = well . level (this . location . x + x - 1, this . location . y + y - 1);
+				var ll;
+				if (block [2] [2 - y] [x]) ll = l - 2;
+				else if (block [1] [2 - y] [x]) ll = l - 1;
+				else if (block [0] [2 - y] [x]) ll = l;
+				else ll = 16384;
+//				console . log ([x, y, ll]);
+				lll = Math . min (lll, ll);
+			}
+		}
+//		console . log ("================");
+		return lll;
 	};
+	this . addToWell = function (well) {
+		//var depth = well . dimensions . depth - 3;
+		var depth = this . level (well);
+//		console . log (depth);
+		var block = this . rotate_block ();
+		for (var d = 0; d < 3; d++) {
+			for (var x = 0; x < 3; x++) {
+				for (var y = 0; y < 3; y++) {
+//					console . log ("Depth = ", depth, " + ", d);
+					if (block [d] [y] [x]) well . content [depth + d] [this . location . x + x - 1] [this . location . y - y + 1] = true;
+				}
+			}
+		}
+	};
+};
+
+var Block31 = function () {
+	Block . call (this);
+	this . block = [[[false, false, false], [false, false, false], [false, false, false]],
+					[[false, false, false], [true, true, true], [false, false, false]],
+					[[false, false, false], [false, false, false], [false, false, false]]];
+	this . draw = function (ctx, dims) {
+		var s = dims . side;
+		var x = 0, y = 0, z = 0;
+		var xsss = x + 3 * s, yms = y - s, zs = z + s;
+		var m = ctx . matrix;
+		var mm = m;
+		mm = translate (mm, - s * (dims . width * 0.5 - this . location . x - 0.5),
+							s * (dims . height * 0.5 - this . location . y - 0.5), s * (this . location . z + 0.5));
+		mm = mtm (this . rotation, mm);
+		mm = translate (mm, -1.5 * s, 0.5 * s, -0.5 * s);
+		ctx . matrix = mm;
+		ctx . beginPath ();
+		ctx . moveto (x, y, z); ctx . lineto (xsss, y, z), ctx . lineto (xsss, yms, z); ctx . lineto (x, yms, z); ctx . lineto (x, y, z);
+		ctx . lineto (x, y, zs); ctx . lineto (xsss, y, zs), ctx . lineto (xsss, yms, zs); ctx . lineto (x, yms, zs); ctx . lineto (x, y, zs);
+		ctx . moveto (x, yms, z); ctx . lineto (x, yms, zs);
+		ctx . moveto (xsss, yms, z); ctx . lineto (xsss, yms, zs);
+		ctx . moveto (xsss, y, z); ctx . lineto (xsss, y, zs);
+		ctx . stroke ();
+		ctx . matrix = m;
+	};
+};
+
+var Block51 = function () {
+	Block . call (this);
+	this . block = [[[false, false, false], [false, true, false], [false, false, false]],
+					[[true, false, false], [true, true, true], [false, false, false]],
+					[[false, false, false], [false, false, false], [false, false, false]]];
 	this . draw = function (ctx, dims) {
 //		ctx . matrix = translate (m, this . location . x * dims, 0, 0);
 		//var x = dims . side * (this . location . x - dims . width * 0.5);
@@ -187,11 +247,9 @@ var Block = function () {
 		var mm = m;
 		mm = translate (mm, - s * (dims . width * 0.5 - this . location . x - 0.5),
 							s * (dims . height * 0.5 - this . location . y - 0.5), s * (this . location . z + 0.5));
-		//mm = rollz (mm, angle); angle += 0.01;
 		mm = mtm (this . rotation, mm);
 		mm = translate (mm, -1.5 * s, 0.5 * s, -0.5 * s);
 		ctx . matrix = mm;
-		ctx . strokeStyle = '#ff2222'; ctx . lineWidth = 2;
 		ctx . beginPath ();
 		ctx . moveto (x, y, z); ctx . lineto (xs, y, z); ctx . lineto (xs, y, zms); ctx . lineto (xss, y, zms);
 			ctx . lineto (xss, y, z); ctx . lineto (xsss, y, z); ctx . lineto (xsss, y, zs); ctx . lineto (x, y, zs); ctx . lineto (x, y, z);
@@ -210,7 +268,14 @@ var Block = function () {
 	};
 };
 
-var block = new Block ();
+var blocks = [Block31, Block51];
+
+var block = new Block31 ();
+
+var chooseBlock = function () {
+	var constructor = blocks [Math . floor (Math . random () * blocks . length)];
+	block = new constructor ();
+};
 
 var Well = function () {
 	this . dimensions = {width: 7, height: 7, depth: 12, side: 40};
@@ -235,6 +300,13 @@ var Well = function () {
 		}
 		return this . content [this . dimensions . depth - 1] [x] [y] = true;
 	};
+	this . level = function (x, y) {
+		if (x < 0 || y < y || x >= this . dimensions . width || y >= this . dimensions . height) return 16384;
+		for (var depth = 0; depth < this . dimensions . depth; depth++) {
+			if (this . content [depth] [x] [y]) return depth - 1;
+		}
+		return this . dimensions . depth - 1;
+	};
 	this . initialiseContent ();
 	this . insertRandomBlock = function () {
 		this . content [Math . floor (this . dimensions . depth * Math . random ())]
@@ -244,6 +316,27 @@ var Well = function () {
 	//for (var ind = 0; ind < 4; ind++) this . insertRandomBlock ();
 	this . reSide = function (width, height) {
 		this . dimensions . side = Math . min (width / this . dimensions . width * 0.96, height / this . dimensions . height * 0.96);
+	};
+	this . removeLayer = function (depth) {
+		while (depth > 0) {
+			var next = depth - 1;
+			for (var x = 0; x < this . dimensions . width; x++) {
+				for (var y = 0; y < this . dimensions . height; y++) {
+					this . content [depth] [x] [y] = this . content [next] [x] [y];
+				}
+			}
+			depth = next;
+		}
+	};
+	this . reduceLevel = function () {
+		for (var depth = 0; depth < this . dimensions . depth; depth++) {
+			var full = true;
+			for (var x = 0; full && x < this . dimensions . width; x++) {
+				for (var y = 0; full && y < this . dimensions . height; y++) full = full & this . content [depth] [x] [y];
+			}
+			if (full) {alert (`Full level at ${depth}`); this . removeLayer (depth); return true;}
+		}
+		return false;
 	};
 	this . drawWell = function (ctx) {
 		ctx . beginPath ();
@@ -326,6 +419,7 @@ var resize = function () {
 	canvas . height = window . innerHeight;
 	well . reSide (window . innerWidth, window . innerHeight);
 	well . draw (ctx, window . innerWidth, window . innerHeight);
+	ctx . strokeStyle = 'white'; ctx . lineWidth = 3;
 	block . draw (ctx, well . dimensions);
 };
 
@@ -344,7 +438,12 @@ var ctrl = function (event) {
 	case "q": block . rotate ([[1, 0, 0, 0], [0, 0, 1, 0], [0, -1, 0, 0], [0, 0, 0, 1]], well . dimensions); break;
 	case "w": block . rotate ([[0, 0, -1, 0], [0, 1, 0, 0], [1, 0, 0, 0], [0, 0, 0, 1]], well . dimensions); break;
 	case "s": block . rotate ([[0, 0, 1, 0], [0, 1, 0, 0], [-1, 0, 0, 0], [0, 0, 0, 1]], well . dimensions); break;
-	case " ": block . addToWell (well); break;
+	case " ":
+		block . addToWell (well);
+		setTimeout (function () {while (well . reduceLevel ()) resize ();}, 1000);
+		chooseBlock ();
+		break;
+	case "Enter": block . level (well); break;
 	default: break;
 	}
 	resize ();
