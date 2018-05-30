@@ -312,6 +312,137 @@ var Block41 = function () {
 	};
 };
 
+var Block42 = function () {
+	Block . call (this);
+	this . block = [[[false, false, false], [false, false, false], [false, false, false]],
+					[[false, false, false], [true, true, true], [false, true, false]],
+					[[false, false, false], [false, false, false], [false, false, false]]];
+	this . draw = function (ctx, dims) {
+		var s = dims . side, ss = s + s, ms = - s, sss = ss + s;
+		ctx . beginPath ();
+		ctx . moveto (0, ms, 0); ctx . lineto (sss, ms, 0); ctx . lineto (sss, 0, 0); ctx . lineto (ss, 0, 0); ctx . lineto (ss, s, 0);
+			ctx . lineto (s, s, 0); ctx . lineto (s, 0, 0); ctx . lineto (0, 0, 0); ctx . lineto (0, ms, 0);
+		ctx . lineto (0, ms, s); ctx . lineto (sss, ms, s); ctx . lineto (sss, 0, s); ctx . lineto (ss, 0, s); ctx . lineto (ss, s, s);
+			ctx . lineto (s, s, s); ctx . lineto (s, 0, s); ctx . lineto (0, 0, s); ctx . lineto (0, ms, s);
+		ctx . moveto (0, 0, 0); ctx . lineto (0, 0, s);
+		ctx . moveto (sss, ms, 0); ctx . lineto (sss, ms, s);
+		ctx . moveto (sss, 0, 0); ctx . lineto (sss, 0, s);
+		ctx . moveto (ss, 0, 0); ctx . lineto (ss, 0, s);
+		ctx . moveto (ss, s, 0); ctx . lineto (ss, s, s);
+		ctx . moveto (s, 0, 0); ctx . lineto (s, 0, s);
+		ctx . moveto (s, s, 0); ctx . lineto (s, s, s);
+		ctx . stroke ();
+	};
+};
+
+var Block43 = function () {
+	Block . call (this);
+	this . block = [[[false, false, false], [false, false, false], [false, false, false]],
+					[[false, false, false], [true, true, false], [false, true, true]],
+					[[false, false, false], [false, false, false], [false, false, false]]];
+	this . draw = function (ctx, dims) {
+		var s = dims . side, ss = s + s, ms = - s, sss = ss + s;
+		ctx . beginPath ();
+		ctx . moveto (0, ms, 0); ctx . lineto (ss, ms, 0); ctx . lineto (ss, 0, 0); ctx . lineto (sss, 0, 0); ctx . lineto (sss, s, 0);
+			ctx . lineto (s, s, 0); ctx . lineto (s, 0, 0); ctx . lineto (0, 0, 0); ctx . lineto (0, ms, 0);
+		ctx . lineto (0, ms, s); ctx . lineto (ss, ms, s); ctx . lineto (ss, 0, s); ctx . lineto (sss, 0, s); ctx . lineto (sss, s, s);
+			ctx . lineto (s, s, s); ctx . lineto (s, 0, s); ctx . lineto (0, 0, s); ctx . lineto (0, ms, s);
+		ctx . moveto (0, 0, 0); ctx . lineto (0, 0, s);
+		ctx . moveto (ss, ms, 0); ctx . lineto (ss, ms, s);
+		ctx . moveto (ss, 0, 0); ctx . lineto (ss, 0, s);
+		ctx . moveto (sss, 0, 0); ctx . lineto (sss, 0, s);
+		ctx . moveto (sss, s, 0); ctx . lineto (sss, s, s);
+		ctx . moveto (s, s, 0); ctx . lineto (s, s, s);
+		ctx . moveto (s, 0, 0); ctx . lineto (s, 0, s);
+		ctx . stroke ();
+	};
+};
+
+var Block44 = function () {
+	Block . call (this);
+	this . block = [[[false, false, false], [false, false, false], [false, false, false]],
+					[[false, false, false], [true, true, false], [false, true, false]],
+					[[false, false, false], [false, true, false], [false, false, false]]];
+	this . draw = function (ctx, dims) {
+		var s = dims . side, ss = s + s, ms = - s;
+		ctx . beginPath ();
+		ctx . moveto (0, ms, 0); ctx . lineto (ss, ms, 0); ctx . lineto (ss, s, 0); ctx . lineto (s, s, 0); ctx . lineto (s, 0, 0);
+			ctx . lineto (0, 0, 0); ctx . lineto (0, ms, 0);
+		ctx . lineto (0, ms, s); ctx . lineto (s, ms, s); ctx . lineto (s, ms, ss); ctx . lineto (ss, ms, ss); ctx . lineto (ss, 0, ss);
+			ctx . lineto (ss, 0, s); ctx . lineto (ss, s, s); ctx . lineto (s, s, s); ctx . lineto (s, 0, s);
+			ctx . lineto (0, 0, s); ctx . lineto (0, ms, s);
+		ctx . moveto (0, 0, 0); ctx . lineto (0, 0, s);
+		ctx . moveto (ss, ms, 0); ctx . lineto (ss, ms, ss);
+		ctx . moveto (ss, s, 0); ctx . lineto (ss, s, s);
+		ctx . moveto (s, 0, 0); ctx . lineto (s, 0, ss); ctx . lineto (ss, 0, ss);
+		ctx . moveto (s, s, 0); ctx . lineto (s, s, s);
+		ctx . moveto (s, ms, s); ctx . lineto (s, 0, s); ctx . lineto (ss, 0, s);
+		ctx . moveto (s, ms, ss); ctx . lineto (s, 0, ss);
+		ctx . stroke ();
+	};
+};
+
+var Block45 = function () {
+	Block . call (this);
+	this . block = [[[false, false, false], [false, false, false], [false, false, false]],
+					[[false, false, false], [true, true, false], [false, true, false]],
+					[[false, false, false], [false, false, false], [false, true, false]]];
+	this . draw = function (ctx, dims) {
+		var s = dims . side, ss = s + s, ms = - s;
+		ctx . beginPath ();
+		ctx . moveto (0, ms, 0); ctx . lineto (ss, ms, 0); ctx . lineto (ss, s, 0); ctx . lineto (s, s, 0); ctx . lineto (s, 0, 0);
+			ctx . lineto (0, 0, 0); ctx . lineto (0, ms, 0);
+		ctx . lineto (0, ms, s); ctx . lineto (ss, ms, s); ctx . lineto (ss, 0, s); ctx . lineto (ss, 0, ss); ctx . lineto (ss, s, ss);
+			ctx . lineto (s, s, ss); ctx . lineto (s, 0, ss); ctx . lineto (s, 0, 0);
+		ctx . moveto (0, 0, 0); ctx . lineto (0, 0, s);
+		ctx . moveto (ss, ms, 0); ctx . lineto (ss, ms, s);
+		ctx . moveto (0, ms, s); ctx . lineto (0, 0, s); ctx . lineto (ss, 0, s);
+		ctx . moveto (s, 0, ss); ctx . lineto (ss, 0, ss);
+		ctx . moveto (ss, s, 0); ctx . lineto (ss, s, ss);
+		ctx . moveto (s, s, 0); ctx . lineto (s, s, ss);
+		ctx . stroke ();
+	};
+};
+
+var Block46 = function () {
+	Block . call (this);
+	this . block = [[[false, false, false], [false, false, false], [false, false, false]],
+					[[false, false, false], [true, true, false], [true, true, false]],
+					[[false, false, false], [false, false, false], [false, false, false]]];
+	this . draw = function (ctx, dims) {
+		var s = dims . side, ss = s + s, ms = - s;
+		ctx . beginPath ();
+		ctx . moveto (0, ms, 0); ctx . lineto (ss, ms, 0); ctx . lineto (ss, s, 0); ctx . lineto (0, s, 0); ctx . lineto (0, ms, 0);
+		ctx . lineto (0, ms, s); ctx . lineto (ss, ms, s); ctx . lineto (ss, s, s); ctx . lineto (0, s, s); ctx . lineto (0, ms, s);
+		ctx . moveto (0, s, 0); ctx . lineto (0, s, s);
+		ctx . moveto (ss, ms, 0); ctx . lineto (ss, ms, s);
+		ctx . moveto (ss, s, 0); ctx . lineto (ss, s, s);
+		ctx . stroke ();
+	};
+};
+
+var Block47 = function () {
+	Block . call (this);
+	this . block = [[[false, false, false], [false, false, false], [false, false, false]],
+					[[false, false, false], [false, true, true], [false, true, false]],
+					[[false, false, false], [false, false, false], [false, true, false]]];
+	this . draw = function (ctx, dims) {
+		var s = dims . side, ms = - s, ss = s + s, sss = ss + s;
+		ctx . beginPath ();
+		ctx . moveto (s, s, 0); ctx . lineto (s, ms, 0); ctx . lineto (sss, ms, 0); ctx . lineto (sss, 0, 0);
+			ctx . lineto (ss, 0, 0); ctx . lineto (ss, s, 0); ctx . lineto (s, s, 0);
+		ctx . lineto (s, s, ss); ctx . lineto (s, 0, ss); ctx . lineto (s, 0, s); ctx . lineto (s, ms, s); ctx . lineto (sss, ms, s);
+			ctx . lineto (sss, 0, s); ctx . lineto (s, 0, s);
+		ctx . moveto (ss, s, 0); ctx . lineto (ss, s, ss); ctx . lineto (ss, 0, ss); ctx . lineto (ss, 0, 0);
+		ctx . moveto (s, ms, 0); ctx . lineto (s, ms, s);
+		ctx . moveto (sss, ms, 0); ctx . lineto (sss, ms, s);
+		ctx . moveto (sss, 0, 0); ctx . lineto (sss, 0, s);
+		ctx . moveto (s, 0, ss); ctx . lineto (ss, 0, ss);
+		ctx . moveto (s, s, ss); ctx . lineto (ss, s, ss);
+		ctx . stroke ();
+	};
+};
+
 var Block51 = function () {
 	Block . call (this);
 	this . block = [[[false, false, false], [false, true, false], [false, false, false]],
@@ -339,9 +470,32 @@ var Block51 = function () {
 	};
 };
 
-var blocks = [Block1, Block2, Block31, Block32, Block41, Block51];
+var Block52 = function () {
+	Block . call (this);
+	this . block = [[[false, false, false], [false, true, false], [false, false, false]],
+					[[false, false, false], [true, true, true], [true, false, false]],
+					[[false, false, false], [false, false, false], [false, false, false]]];
+	this . draw = function (ctx, dims) {
+		var s = dims . side, ss = s + s, sss = ss + s, ms = - s;
+		ctx . beginPath ();
+		ctx . moveto (0, ms, s); ctx . lineto (sss, ms, s); ctx . lineto (sss, 0, s); ctx . lineto (s, 0, s); ctx . lineto (s, s, s); ctx . lineto (0, s, s);
+		ctx . lineto (0, ms, s); ctx . lineto (0, ms, 0); ctx . lineto (s, ms, 0); ctx . lineto (s, ms, ms); ctx . lineto (ss, ms, ms); ctx . lineto (ss, ms, 0);
+		ctx . lineto (sss, ms, 0); ctx . lineto (sss, 0, 0); ctx . lineto (ss, 0, 0); ctx . lineto (ss, 0, ms); ctx . lineto (s, 0, ms); ctx . lineto (s, 0, s);
+		ctx . moveto (0, ms, 0); ctx . lineto (0, s, 0); ctx . lineto (s, s, 0); ctx . lineto (s, ms, 0);
+		ctx . moveto (0, s, 0); ctx . lineto (0, s, s);
+		ctx . moveto (s, s, 0); ctx . lineto (s, s, s);
+		ctx . moveto (sss, ms, 0); ctx . lineto (sss, ms, s);
+		ctx . moveto (sss, 0, 0); ctx . lineto (sss, 0, s);
+		ctx . moveto (ss, ms, 0); ctx . lineto (ss, 0, 0);
+		ctx . moveto (ss, ms, ms); ctx . lineto (ss, 0, ms);
+		ctx . moveto (s, ms, ms); ctx . lineto (s, 0, ms);
+		ctx . stroke ();
+	};
+};
 
-var block = new Block41 ();
+var blocks = [Block1, Block2, Block31, Block32, Block41, Block42, Block43, Block44, Block45, Block46, Block47, Block51, Block52];
+
+var block = new Block52 ();
 
 var chooseBlock = function () {
 	var constructor = blocks [Math . floor (Math . random () * blocks . length)];
@@ -350,7 +504,7 @@ var chooseBlock = function () {
 
 var Well = function () {
 	this . dimensions = {width: 7, height: 7, depth: 12, side: 40};
-	this . colours = ['blue', 'red', 'magenta', 'green', 'cyan', 'yellow', 'white', 'orange', 'blue', 'red', 'magenta', 'red', 'yellow', 'cyan'];
+	this . colours = ['blue', 'red', 'magenta', 'green', 'cyan', 'yellow', 'gray', 'blue', 'red', 'magenta', 'green', 'cyan', 'yellow', 'gray', 'orange'];
 	this . content = [];
 	this . initialiseContent = function () {
 		this . content = [];
@@ -424,7 +578,8 @@ var Well = function () {
 		}
 		for (var z = 0; z <= this . dimensions . depth; z++) {
 			var zz = this . dimensions . side * z;
-			ctx . moveto (left, top, zz); ctx . lineto (right, top, zz); ctx . lineto (right, bottom, zz); ctx . lineto (left, bottom, zz); ctx . lineto (left, top, zz);
+			ctx . moveto (left, top, zz); ctx . lineto (right, top, zz); ctx . lineto (right, bottom, zz);
+			ctx . lineto (left, bottom, zz); ctx . lineto (left, top, zz);
 		}
 		ctx . moveto (left, top, 0); ctx . lineto (left, top, depth);
 		ctx . moveto (right, top, 0); ctx . lineto (right, top, depth);
@@ -437,7 +592,7 @@ var Well = function () {
 		var left = -0.5 * this . dimensions . width * side;
 		var top = 0.5 * this . dimensions . height * side;
 		for (var layer = this . dimensions . depth - 1; layer >= 0; layer--) {
-			ctx . fillStyle = this . colours [layer];
+			ctx . fillStyle = this . colours [this . dimensions . depth - layer - 1];
 			var depth = layer * side;
 			for (var x = 0; x < this . dimensions . width; x++) {
 				for (var y = 0; y < this . dimensions . height; y++) {
@@ -505,8 +660,8 @@ var ctrl = function (event) {
 	case "ArrowDown": block . move_down (well . dimensions); break;
 	case "d": block . rotate ([[0, -1, 0, 0], [1, 0, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]], well . dimensions); break;
 	case "e": block . rotate ([[0, 1, 0, 0], [-1, 0, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]], well . dimensions); break;
-	case "a": block . rotate ([[1, 0, 0, 0], [0, 0, -1, 0], [0, 1, 0, 0], [0, 0, 0, 1]], well . dimensions); break;
-	case "q": block . rotate ([[1, 0, 0, 0], [0, 0, 1, 0], [0, -1, 0, 0], [0, 0, 0, 1]], well . dimensions); break;
+	case "q": block . rotate ([[1, 0, 0, 0], [0, 0, -1, 0], [0, 1, 0, 0], [0, 0, 0, 1]], well . dimensions); break;
+	case "a": block . rotate ([[1, 0, 0, 0], [0, 0, 1, 0], [0, -1, 0, 0], [0, 0, 0, 1]], well . dimensions); break;
 	case "w": block . rotate ([[0, 0, -1, 0], [0, 1, 0, 0], [1, 0, 0, 0], [0, 0, 0, 1]], well . dimensions); break;
 	case "s": block . rotate ([[0, 0, 1, 0], [0, 1, 0, 0], [-1, 0, 0, 0], [0, 0, 0, 1]], well . dimensions); break;
 	case " ":
