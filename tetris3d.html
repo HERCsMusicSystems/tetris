@@ -29,7 +29,7 @@
 	<title>TETRIS 3D</title>
 </head>
 
-<body bgcolor=black style = "margin: 0;" onkeypress="javascript: ctrl (event);" >
+<body bgcolor=black style = "margin: 0;" onkeydown="javascript: ctrl (event);" >
 	<div>
 		<canvas id=tetris />
 	</div>
@@ -534,11 +534,11 @@ var Well = function () {
 	};
 	this . initialiseContent ();
 	this . insertRandomBlock = function () {
-		this . content [Math . floor (this . dimensions . depth * Math . random ())]
+		this . content [Math . floor ((this . dimensions . depth - 3) * Math . random ()) + 3]
 						[Math . floor (this . dimensions . width * Math . random ())]
 						[Math . floor (this . dimensions . height * Math . random ())] = true;
 	};
-	//for (var ind = 0; ind < 4; ind++) this . insertRandomBlock ();
+	for (var ind = 0; ind < 4; ind++) this . insertRandomBlock ();
 	this . reSide = function (width, height) {
 		this . dimensions . side = Math . min (width / this . dimensions . width * 0.96, height / this . dimensions . height * 0.96);
 	};
@@ -551,6 +551,9 @@ var Well = function () {
 				}
 			}
 			depth = next;
+		}
+		for (var x = 0; x < this . dimensions . width; x++) {
+			for (var y = 0; y < this . dimensions . height; y++) this . content [0] [x] [y] = false;
 		}
 	};
 	this . reduceLevel = function () {
