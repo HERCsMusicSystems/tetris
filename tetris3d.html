@@ -493,9 +493,36 @@ var Block52 = function () {
 	};
 };
 
-var blocks = [Block1, Block2, Block31, Block32, Block41, Block42, Block43, Block44, Block45, Block46, Block47, Block51, Block52];
+var Block53 = function () {
+	Block . call (this);
+	this . block = [[[false, false, false], [false, true, false], [false, false, false]],
+					[[false, false, false], [true, true, true], [false, true, false]],
+					[[false, false, false], [false, false, false], [false, false, false]]];
+	this . draw = function (ctx, dims) {
+		var s = dims . side, ss = s + s, ms = - s, sss = ss + s;
+		ctx . beginPath ();
+		ctx . moveto (0, ms, 0); ctx . lineto (s, ms, 0); ctx . lineto (s, ms, ms); ctx . lineto (ss, ms, ms); ctx . lineto (ss, ms, 0);
+			ctx . lineto (sss, ms, 0); ctx . lineto (sss, 0, 0); ctx . lineto (ss, 0, 0); ctx . lineto (ss, s, 0);
+			ctx . lineto (s, s, 0); ctx . lineto (s, 0, 0); ctx . lineto (0, 0, 0); ctx . lineto (0, ms, 0);
+		ctx . lineto (0, ms, s);
+			ctx . lineto (sss, ms, s); ctx . lineto (sss, 0, s); ctx . lineto (ss, 0, s); ctx . lineto (ss, s, s);
+			ctx . lineto (s, s, s); ctx . lineto (s, 0, s); ctx . lineto (0, 0, s); ctx . lineto (0, ms, s);
+		ctx . moveto (0, 0, 0); ctx . lineto (0, 0, s);
+		ctx . moveto (sss, ms, 0); ctx . lineto (sss, ms, s);
+		ctx . moveto (sss, 0, 0); ctx . lineto (sss, 0, s);
+		ctx . moveto (ss, 0, ms); ctx . lineto (ss, 0, s);
+		ctx . moveto (ss, s, 0); ctx . lineto (ss, s, s);
+		ctx . moveto (s, 0, ms); ctx . lineto (s, 0, s);
+		ctx . moveto (s, s, 0); ctx . lineto (s, s, s);
+		ctx . moveto (s, ms, 0); ctx . lineto (s, 0, 0); ctx . lineto (ss, 0, 0); ctx . lineto (ss, ms, 0);
+		ctx . moveto (s, ms, ms); ctx . lineto (s, 0, ms); ctx . lineto (ss, 0, ms); ctx . lineto (ss, ms, ms);
+		ctx . stroke ();
+	};
+};
 
-var block = new Block52 ();
+var blocks = [Block1, Block2, Block31, Block32, Block41, Block42, Block43, Block44, Block45, Block46, Block47, Block51, Block52, Block53];
+
+var block = new Block53 ();
 
 var chooseBlock = function () {
 	var constructor = blocks [Math . floor (Math . random () * blocks . length)];
