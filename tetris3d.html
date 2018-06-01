@@ -37,6 +37,10 @@
 
 <script>
 
+var setup = {};
+try {setup = JSON . parse (unescape (window . location . search) . substring (1));} catch (error) {setup = {};}
+
+
 var vtm = function (vector, matrix) {
 	var v = [];
 	for (var y = 0; y < matrix . length; y++) {
@@ -118,7 +122,7 @@ var ctx = context3d (canvas);
 var angle = 0;
 
 var Block = function () {
-	this . location = {x: 1, y: 1, z: 0};
+	this . location = {x: 8, y: 1, z: 0};
 	this . rotation = [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]];
 	this . rotate_block = function () {
 		var block = [[[0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0]]];
@@ -133,13 +137,13 @@ var Block = function () {
 		return block;
 	};
 	this . clamp_right = function (dimensions, block) {
-		if (this . location . x + 2 > dimensions . height) {
+		if (this . location . x + 2 > dimensions . width) {
 			for (var x = 0; x < 3; x++) {for (var y = 0; y < 3; y++) {if (block [x] [y] [2]) {this . location . x = dimensions . width - 2; return;}}}
 		}
-		if (this . location . x + 1 > dimensions . height) {
+		if (this . location . x + 1 > dimensions . width) {
 			for (var x = 0; x < 3; x++) {for (var y = 0; y < 3; y++) {if (block [x] [y] [1]) {this . location . x = dimensions . width - 1; return;}}}
 		}
-		if (this . location . x > dimensions . height) this . location . x = dimensions . width;
+		if (this . location . x > dimensions . width) this . location . x = dimensions . width;
 	};
 	this . move_right = function (dimensions) {this . location . x += 1; this . clamp_right (dimensions, this . rotate_block ());};
 	this . clamp_left = function (dimensions, block) {
@@ -169,6 +173,11 @@ var Block = function () {
 		this . clamp_top (dimensions, block);
 		this . clamp_left (dimensions, block);
 		this . clamp_right (dimensions, block);
+	};
+	this . readjust_position = function (well) {
+		this . location . x = Math . floor (well . dimensions . width * 0.5);
+		this . location . y = Math . floor (well . dimensions . height * 0.5);
+		this . clamp (well . dimensions, this . rotate_block ());
 	};
 	this . rotate = function (matrix, dimensions) {this . rotation = mtm (this . rotation, matrix); this . clamp (dimensions, this . rotate_block ());};
 	this . level = function (well) {
@@ -202,6 +211,7 @@ var Block = function () {
 				}
 			}
 		}
+		well . addScore (this . score);
 	};
 	this . drawer = function (ctx, dims) {
 		var side = dims . side;
@@ -219,6 +229,7 @@ var Block = function () {
 
 var Block1 = function () {
 	Block . call (this);
+	this . score = 1;
 	this . block = [[[false, false, false], [false, false, false], [false, false, false]],
 					[[false, false, false], [false, true, false], [false, false, false]],
 					[[false, false, false], [false, false, false], [false, false, false]]];
@@ -236,6 +247,7 @@ var Block1 = function () {
 
 var Block2 = function () {
 	Block . call (this);
+	this . score = 2;
 	this . block = [[[false, false, false], [false, false, false], [false, false, false]],
 					[[false, false, false], [true, true, false], [false, false, false]],
 					[[false, false, false], [false, false, false], [false, false, false]]];
@@ -253,6 +265,7 @@ var Block2 = function () {
 
 var Block31 = function () {
 	Block . call (this);
+	this . score = 3;
 	this . block = [[[false, false, false], [false, false, false], [false, false, false]],
 					[[false, false, false], [true, true, true], [false, false, false]],
 					[[false, false, false], [false, false, false], [false, false, false]]];
@@ -272,6 +285,7 @@ var Block31 = function () {
 
 var Block32 = function () {
 	Block . call (this);
+	this . score = 3;
 	this . block = [[[false, false, false], [false, false, false], [false, false, false]],
 					[[false, false, false], [true, true, false], [false, true, false]],
 					[[false, false, false], [false, false, false], [false, false, false]]];
@@ -293,6 +307,7 @@ var Block32 = function () {
 
 var Block41 = function () {
 	Block . call (this);
+	this . score = 4;
 	this . block = [[[false, false, false], [false, false, false], [false, false, false]],
 					[[false, false, false], [true, true, true], [false, false, true]],
 					[[false, false, false], [false, false, false], [false, false, false]]];
@@ -314,6 +329,7 @@ var Block41 = function () {
 
 var Block42 = function () {
 	Block . call (this);
+	this . score = 4;
 	this . block = [[[false, false, false], [false, false, false], [false, false, false]],
 					[[false, false, false], [true, true, true], [false, true, false]],
 					[[false, false, false], [false, false, false], [false, false, false]]];
@@ -337,6 +353,7 @@ var Block42 = function () {
 
 var Block43 = function () {
 	Block . call (this);
+	this . score = 4;
 	this . block = [[[false, false, false], [false, false, false], [false, false, false]],
 					[[false, false, false], [true, true, false], [false, true, true]],
 					[[false, false, false], [false, false, false], [false, false, false]]];
@@ -360,6 +377,7 @@ var Block43 = function () {
 
 var Block44 = function () {
 	Block . call (this);
+	this . score = 4;
 	this . block = [[[false, false, false], [false, false, false], [false, false, false]],
 					[[false, false, false], [true, true, false], [false, true, false]],
 					[[false, false, false], [false, true, false], [false, false, false]]];
@@ -384,6 +402,7 @@ var Block44 = function () {
 
 var Block45 = function () {
 	Block . call (this);
+	this . score = 4;
 	this . block = [[[false, false, false], [false, false, false], [false, false, false]],
 					[[false, false, false], [true, true, false], [false, true, false]],
 					[[false, false, false], [false, false, false], [false, true, false]]];
@@ -406,6 +425,7 @@ var Block45 = function () {
 
 var Block46 = function () {
 	Block . call (this);
+	this . score = 4;
 	this . block = [[[false, false, false], [false, false, false], [false, false, false]],
 					[[false, false, false], [true, true, false], [true, true, false]],
 					[[false, false, false], [false, false, false], [false, false, false]]];
@@ -423,6 +443,7 @@ var Block46 = function () {
 
 var Block47 = function () {
 	Block . call (this);
+	this . score = 4;
 	this . block = [[[false, false, false], [false, false, false], [false, false, false]],
 					[[false, false, false], [false, true, true], [false, true, false]],
 					[[false, false, false], [false, false, false], [false, true, false]]];
@@ -445,6 +466,7 @@ var Block47 = function () {
 
 var Block51 = function () {
 	Block . call (this);
+	this . score = 5;
 	this . block = [[[false, false, false], [false, true, false], [false, false, false]],
 					[[true, false, false], [true, true, true], [false, false, false]],
 					[[false, false, false], [false, false, false], [false, false, false]]];
@@ -472,6 +494,7 @@ var Block51 = function () {
 
 var Block52 = function () {
 	Block . call (this);
+	this . score = 5;
 	this . block = [[[false, false, false], [false, true, false], [false, false, false]],
 					[[false, false, false], [true, true, true], [true, false, false]],
 					[[false, false, false], [false, false, false], [false, false, false]]];
@@ -495,6 +518,7 @@ var Block52 = function () {
 
 var Block53 = function () {
 	Block . call (this);
+	this . score = 5;
 	this . block = [[[false, false, false], [false, true, false], [false, false, false]],
 					[[false, false, false], [true, true, true], [false, true, false]],
 					[[false, false, false], [false, false, false], [false, false, false]]];
@@ -520,16 +544,44 @@ var Block53 = function () {
 	};
 };
 
-var blocks = [Block1, Block2, Block31, Block32, Block41, Block42, Block43, Block44, Block45, Block46, Block47, Block51, Block52, Block53];
+var Block54 = function () {
+	Block . call (this);
+	this . score = 5;
+	this . block = [[[false, false, false], [false, false, false], [false, false, false]],
+					[[false, false, true], [true, true, true], [true, false, false]],
+					[[false, false, false], [false, false, false], [false, false, false]]];
+	this . draw = function (ctx, dims) {
+		var s = dims . side, ms = - s, mss = ms - s, ss = s + s, sss = ss + s;
+		ctx . beginPath ();
+		ctx . moveto (0, ms, 0); ctx . lineto (ss, ms, 0); ctx . lineto (ss, mss, 0); ctx . lineto (sss, mss, 0); ctx . lineto (sss, 0, 0);
+			ctx . lineto (s, 0, 0); ctx . lineto (s, s, 0); ctx . lineto (0, s, 0); ctx . lineto (0, ms, 0);
+		ctx . lineto (0, ms, s); ctx . lineto (ss, ms, s); ctx . lineto (ss, mss, s); ctx . lineto (sss, mss, s); ctx . lineto (sss, 0, s);
+			ctx . lineto (s, 0, s); ctx . lineto (s, s, s); ctx . lineto (0, s, s); ctx . lineto (0, ms, s);
+		ctx . moveto (ss, ms, 0); ctx . lineto (ss, ms, s);
+		ctx . moveto (ss, mss, 0); ctx . lineto (ss, mss, s);
+		ctx . moveto (sss, mss, 0); ctx . lineto (sss, mss, s);
+		ctx . moveto (sss, 0, 0); ctx . lineto (sss, 0, s);
+		ctx . moveto (s, 0, 0); ctx . lineto (s, 0, s);
+		ctx . moveto (s, s, 0); ctx . lineto (s, s, s);
+		ctx . moveto (0, s, 0); ctx . lineto (0, s, s);
+		ctx . stroke ();
+	};
+};
 
-var block = new Block53 ();
+var blocks = [Block1, Block2, Block31, Block32, Block41, Block42, Block43, Block44, Block45, Block46, Block47,
+			Block51, Block52, Block53, Block54];
+
+var block = new Block54 ();
 
 var chooseBlock = function () {
 	var constructor = blocks [Math . floor (Math . random () * blocks . length)];
 	block = new constructor ();
+	block . readjust_position (well);
 };
 
-var Well = function () {
+var Well = function (setup) {
+	this . score = 0;
+	this . addScore = function (score) {this . score += score;};
 	this . dimensions = {width: 7, height: 7, depth: 12, side: 40};
 	this . colours = ['blue', 'red', 'magenta', 'green', 'cyan', 'yellow', 'gray', 'blue', 'red', 'magenta', 'green', 'cyan', 'yellow', 'gray', 'orange'];
 	this . content = [];
@@ -559,13 +611,11 @@ var Well = function () {
 		}
 		return this . dimensions . depth - 1;
 	};
-	this . initialiseContent ();
 	this . insertRandomBlock = function () {
 		this . content [Math . floor ((this . dimensions . depth - 3) * Math . random ()) + 3]
 						[Math . floor (this . dimensions . width * Math . random ())]
 						[Math . floor (this . dimensions . height * Math . random ())] = true;
 	};
-	for (var ind = 0; ind < 4; ind++) this . insertRandomBlock ();
 	this . reSide = function (width, height) {
 		this . dimensions . side = Math . min (width / this . dimensions . width * 0.96, height / this . dimensions . height * 0.96);
 	};
@@ -622,7 +672,7 @@ var Well = function () {
 		var left = -0.5 * this . dimensions . width * side;
 		var top = 0.5 * this . dimensions . height * side;
 		for (var layer = this . dimensions . depth - 1; layer >= 0; layer--) {
-			ctx . fillStyle = this . colours [this . dimensions . depth - layer - 1];
+			ctx . fillStyle = this . colours [layer];
 			var depth = layer * side;
 			for (var x = 0; x < this . dimensions . width; x++) {
 				for (var y = 0; y < this . dimensions . height; y++) {
@@ -665,10 +715,19 @@ var Well = function () {
 		ctx . translate (width * 0.5, height * 0.5);
 		this . drawWell (ctx);
 		this . drawContent (ctx);
+		ctx . strokeText ("SCORE = " + this . score,
+			this . dimensions . width * this . dimensions . side * 0.5 + 20,
+			this . dimensions . height * this . dimensions . side * -0.5 + 20);
 	}
+	for (var key in setup) {
+		if (typeof setup [key] == 'object') {for (var sub in setup [key]) this [key] [sub] = setup [key] [sub];}
+		else this [key] = setup [key];
+	}
+	this . initialiseContent ();
+	for (var ind = 0; ind < 4; ind++) this . insertRandomBlock ();
 };
 
-var well = new Well ();
+var well = new Well (setup);
 
 var resize = function () {
 	canvas . width = window . innerWidth;
@@ -678,6 +737,8 @@ var resize = function () {
 	ctx . strokeStyle = 'white'; ctx . lineWidth = 3; ctx . lineCap = 'round';
 	block . drawer (ctx, well . dimensions);
 };
+
+block . readjust_position (well);
 
 //setInterval (resize, 50);
 resize ();
