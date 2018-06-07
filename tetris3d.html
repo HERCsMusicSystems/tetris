@@ -27,11 +27,42 @@
 
 <head>
 	<title>TETRIS 3D</title>
+	<style>
+	td {padding: 10px;}
+	</style>
 </head>
 
-<body bgcolor=black style = "margin: 0;" onkeydown="javascript: ctrl (event);" >
+<body bgcolor=black style = "margin: 0;" onkeydown="javascript: ctrl (event . key . toLowerCase ());" >
 	<div>
 		<canvas id=tetris />
+	</div>
+	<div style="position: absolute; top: 0px; right: 0px; text-align: center; color: #88ff88; font-family: arial;">
+		<input type=button value="ROLL X UP (A)" style="width: 160px;" onclick="javascript: ctrl ('a');" />
+		<input type=button value="ROLL X DOWN (Q)" style="width: 160px;" onclick="javascript: ctrl ('q');" />
+		<br />
+		<input type=button value="ROLL Y LEFT (S)" style="width: 160px;" onclick="javascript: ctrl ('s');" />
+		<input type=button value="ROLL Y RIGHT (W)" style="width: 160px;" onclick="javascript: ctrl ('w');" />
+		<br />
+		<input type=button value="ROLL Z RIGHT (D)" style="width: 160px;" onclick="javascript: ctrl ('d');" />
+		<input type=button value="ROLL Z LEFT (E)" style="width: 160px;" onclick="javascript: ctrl ('e');" />
+		<br />
+		<input type=button value="RELEASE (spacebar)" style="width: 320px;" onclick="javascript: ctrl (' ');" />
+		<div id=score />SCORE</div>
+		<br />
+		HI SCORES
+		<br />
+		<table style="color: #88ff88; font-family: arial; text-align: right;" align=center >
+			<tr><td>1</td><td id=name_0 ></td><td id=score_0 ></td></tr>
+			<tr><td>2</td><td id=name_1 ></td><td id=score_1 ></td></tr>
+			<tr><td>3</td><td id=name_2 ></td><td id=score_2 ></td></tr>
+			<tr><td>4</td><td id=name_3 ></td><td id=score_3 ></td></tr>
+			<tr><td>5</td><td id=name_4 ></td><td id=score_4 ></td></tr>
+			<tr><td>6</td><td id=name_5 ></td><td id=score_5 ></td></tr>
+			<tr><td>7</td><td id=name_6 ></td><td id=score_6 ></td></tr>
+			<tr><td>8</td><td id=name_7 ></td><td id=score_7 ></td></tr>
+			<tr><td>9</td><td id=name_8 ></td><td id=score_8 ></td></tr>
+			<tr><td>10</td><td id=name_9 ></td><td id=score_9 ></td></tr>
+		</table>
 	</div>
 </body>
 
@@ -544,7 +575,7 @@ var Block53 = function () {
 	};
 };
 
-var Block54 = function () {
+var Block5Z = function () {
 	Block . call (this);
 	this . score = 5;
 	this . block = [[[false, false, false], [false, false, false], [false, false, false]],
@@ -568,10 +599,64 @@ var Block54 = function () {
 	};
 };
 
-var blocks = [Block1, Block2, Block31, Block32, Block41, Block42, Block43, Block44, Block45, Block46, Block47,
-			Block51, Block52, Block53, Block54];
+var Block5P = function () {
+	Block . call (this);
+	this . score = 5;
+	this . block = [[[false, false, false], [false, false, false], [false, false, false]],
+					[[false, true, false], [true, true, true], [false, true, false]],
+					[[false, false, false], [false, false, false], [false, false, false]]];
+	this . draw = function (ctx, dims) {
+		var s = dims . side, ms = - s, mss = ms - s, ss = s + s, sss = ss + s;
+		ctx . beginPath ();
+		ctx . moveto (0, ms, 0); ctx . lineto (s, ms, 0); ctx . lineto (s, mss, 0); ctx . lineto (ss, mss, 0); ctx . lineto (ss, ms, 0);
+		ctx . lineto (sss, ms, 0); ctx . lineto (sss, 0, 0); ctx . lineto (ss, 0, 0); ctx . lineto (ss, s, 0); ctx . lineto (s, s, 0);
+		ctx . lineto (s, 0, 0); ctx . lineto (0, 0, 0); ctx . lineto (0, ms, 0);
+		ctx . lineto (0, ms, s); ctx . lineto (s, ms, s); ctx . lineto (s, mss, s); ctx . lineto (ss, mss, s); ctx . lineto (ss, ms, s);
+		ctx . lineto (sss, ms, s); ctx . lineto (sss, 0, s); ctx . lineto (ss, 0, s); ctx . lineto (ss, s, s); ctx . lineto (s, s, s);
+		ctx . lineto (s, 0, s); ctx . lineto (0, 0, s); ctx . lineto (0, ms, s);
+		ctx . moveto (s, ms, 0); ctx . lineto (s, ms, s);
+		ctx . moveto (s, mss, 0); ctx . lineto (s, mss, s);
+		ctx . moveto (ss, mss, 0); ctx . lineto (ss, mss, s);
+		ctx . moveto (ss, ms, 0); ctx . lineto (ss, ms, s);
+		ctx . moveto (sss, ms, 0); ctx . lineto (sss, ms, s);
+		ctx . moveto (sss, 0, 0); ctx . lineto (sss, 0, s);
+		ctx . moveto (ss, 0, 0); ctx . lineto (ss, 0, s);
+		ctx . moveto (ss, s, 0); ctx . lineto (ss, s, s);
+		ctx . moveto (s, s, 0); ctx . lineto (s, s, s);
+		ctx . moveto (s, 0, 0); ctx . lineto (s, 0, s);
+		ctx . moveto (0, 0, 0); ctx . lineto (0, 0, s);
+		ctx . stroke ();
+	};
+};
 
-var block = new Block54 ();
+var Block5E = function () {
+	Block . call (this);
+	this . score = 5;
+	this . block = [[[false, false, false], [false, false, false], [false, false, false]],
+					[[true, false, true], [true, true, true], [false, false, false]],
+					[[false, false, false], [false, false, false], [false, false, false]]];
+	this . draw = function (ctx, dims) {
+		var s = dims . side, ms = - s, mss = ms - s, ss = s + s, sss = ss + s;
+		ctx . beginPath ();
+		ctx . moveto (0, mss, 0); ctx . lineto (s, mss, 0); ctx . lineto (s, ms, 0); ctx . lineto (ss, ms, 0); ctx . lineto (ss, mss, 0);
+		ctx . lineto (sss, mss, 0); ctx . lineto (sss, 0, 0); ctx . lineto (0, 0, 0); ctx . lineto (0, mss, 0);
+		ctx . lineto (0, mss, s); ctx . lineto (s, mss, s); ctx . lineto (s, ms, s); ctx . lineto (ss, ms, s); ctx . lineto (ss, mss, s);
+		ctx . lineto (sss, mss, s); ctx . lineto (sss, 0, s); ctx . lineto (0, 0, s); ctx . lineto (0, mss, s);
+		ctx . moveto (s, mss, 0); ctx . lineto (s, mss, s);
+		ctx . moveto (s, ms, 0); ctx . lineto (s, ms, s);
+		ctx . moveto (ss, ms, 0); ctx . lineto (ss, ms, s);
+		ctx . moveto (ss, mss, 0); ctx . lineto (ss, mss, s);
+		ctx . moveto (sss, mss, 0); ctx . lineto (sss, mss, s);
+		ctx . moveto (sss, 0, 0); ctx . lineto (sss, 0, s);
+		ctx . moveto (0, 0, 0); ctx . lineto (0, 0, s);
+		ctx . stroke ();
+	};
+};
+
+var blocks = [Block1, Block2, Block31, Block32, Block41, Block42, Block43, Block44, Block45, Block46, Block47,
+			Block51, Block52, Block53, Block5Z, Block5P, Block5E];
+
+var block = new Block5E ();
 
 var chooseBlock = function () {
 	var constructor = blocks [Math . floor (Math . random () * blocks . length)];
@@ -581,6 +666,7 @@ var chooseBlock = function () {
 
 var Well = function (setup) {
 	this . score = 0;
+	this . random_area = 3;
 	this . addScore = function (score) {this . score += score;};
 	this . dimensions = {width: 7, height: 7, depth: 12, side: 40};
 	this . colours = ['blue', 'red', 'magenta', 'green', 'cyan', 'yellow', 'gray', 'blue', 'red', 'magenta', 'green', 'cyan', 'yellow', 'gray', 'orange'];
@@ -612,7 +698,7 @@ var Well = function (setup) {
 		return this . dimensions . depth - 1;
 	};
 	this . insertRandomBlock = function () {
-		this . content [Math . floor ((this . dimensions . depth - 3) * Math . random ()) + 3]
+		this . content [Math . floor ((this . dimensions . depth - this . random_area) * Math . random ()) + this . random_area]
 						[Math . floor (this . dimensions . width * Math . random ())]
 						[Math . floor (this . dimensions . height * Math . random ())] = true;
 	};
@@ -643,6 +729,17 @@ var Well = function (setup) {
 		}
 		return false;
 	};
+	this . freeLevels = function () {
+		for (var depth = 0; depth < this . dimensions . depth; depth++) {
+			for (var x = 0; x < this . dimensions . width; x++) {
+				for (var y = 0; y < this . dimensions . height; y++) {
+					if (this . content [depth] [x] [y]) return depth;
+				}
+			}
+		}
+		return this . dimensions . depth;
+	};
+	this . completed = function () {return this . freeLevels () >= this . dimensions . depth - 1;};
 	this . drawWell = function (ctx) {
 		ctx . beginPath ();
 		var right = this . dimensions . width * 0.5 * this . dimensions . side, left = - right;
@@ -715,9 +812,6 @@ var Well = function (setup) {
 		ctx . translate (width * 0.5, height * 0.5);
 		this . drawWell (ctx);
 		this . drawContent (ctx);
-		ctx . strokeText ("SCORE = " + this . score,
-			this . dimensions . width * this . dimensions . side * 0.5 + 20,
-			this . dimensions . height * this . dimensions . side * -0.5 + 20);
 	}
 	for (var key in setup) {
 		if (typeof setup [key] == 'object') {for (var sub in setup [key]) this [key] [sub] = setup [key] [sub];}
@@ -729,13 +823,43 @@ var Well = function (setup) {
 
 var well = new Well (setup);
 
+var drawHiScores = function (dims) {
+	var entry = localStorage . getItem ([dims . depth, dims . width, dims . height]);
+	if (entry != undefined) entry = JSON . parse (entry);
+	else {
+		entry = [];
+		for (var ind = 0; ind < 10; ind++) entry . push ({name: '---', score: '---'});
+		localStorage . setItem ([dims . depth, dims . width, dims . height], JSON . stringify (entry));
+	}
+	for (var ind = 0; ind < 10; ind++) {
+		document . getElementById ('name_' + ind) . innerHTML = entry [ind] . name;
+		document . getElementById ('score_' + ind) . innerHTML = entry [ind] . score;
+	}
+};
+
+var enterScore = function (dims, name, score) {
+	var entry = localStorage . getItem ([dims . depth, dims . width, dims . height]);
+	if (entry != undefined) entry = JSON . parse (entry);
+	entry . unshift ({name: name, score: score});
+	localStorage . setItem ([dims . depth, dims . width, dims . height], JSON . stringify (entry));
+};
+
 var resize = function () {
 	canvas . width = window . innerWidth;
 	canvas . height = window . innerHeight;
 	well . reSide (window . innerWidth, window . innerHeight);
 	well . draw (ctx, window . innerWidth, window . innerHeight);
-	ctx . strokeStyle = 'white'; ctx . lineWidth = 3; ctx . lineCap = 'round';
-	block . drawer (ctx, well . dimensions);
+	if (well . completed ()) {
+		var name = prompt ("Mission Accomplished\nYour name", "name");
+		if (name != null) enterScore (well . dimensions, name, well . score);
+		block = null;
+		ctx . strokeStyle = 'red';
+		ctx . strokeText ("GAME OVER", 0, 0);
+		drawHiScores (well . dimensions);
+	} else {
+		ctx . strokeStyle = 'white'; ctx . lineWidth = 3; ctx . lineCap = 'round';
+		block . drawer (ctx, well . dimensions);
+	}
 };
 
 block . readjust_position (well);
@@ -743,12 +867,13 @@ block . readjust_position (well);
 //setInterval (resize, 50);
 resize ();
 
-var ctrl = function (event) {
-	switch (event . key) {
-	case "ArrowRight": block . move_right (well . dimensions); break;
-	case "ArrowLeft": block . move_left (well . dimensions); break;
-	case "ArrowUp": block . move_up (well . dimensions); break;
-	case "ArrowDown": block . move_down (well . dimensions); break;
+var ctrl = function (key) {
+	if (block == null) {if (key != "enter") return; well = new Well (setup); chooseBlock (); resize (); return;}
+	switch (key) {
+	case "arrowright": block . move_right (well . dimensions); break;
+	case "arrowleft": block . move_left (well . dimensions); break;
+	case "arrowup": block . move_up (well . dimensions); break;
+	case "arrowdown": block . move_down (well . dimensions); break;
 	case "d": block . rotate ([[0, -1, 0, 0], [1, 0, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]], well . dimensions); break;
 	case "e": block . rotate ([[0, 1, 0, 0], [-1, 0, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]], well . dimensions); break;
 	case "q": block . rotate ([[1, 0, 0, 0], [0, 0, -1, 0], [0, 1, 0, 0], [0, 0, 0, 1]], well . dimensions); break;
@@ -759,8 +884,9 @@ var ctrl = function (event) {
 		block . addToWell (well);
 		setTimeout (function () {while (well . reduceLevel ()) resize ();}, 1000);
 		chooseBlock ();
+		document . getElementById ('score') . innerHTML = 'SCORE = ' + well . score;
 		break;
-	case "Enter": block . level (well); break;
+	case "enter": block . level (well); break;
 	default: break;
 	}
 	resize ();
