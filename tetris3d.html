@@ -49,7 +49,7 @@
 		<input type=button value="RELEASE (spacebar)" style="width: 320px;" onclick="javascript: ctrl (' ');" />
 		<div id=score />SCORE</div>
 		<br />
-		HI SCORES
+		BEST (lowest) SCORES
 		<br />
 		<table style="color: #88ff88; font-family: arial; text-align: right;" align=center >
 			<tr><td>1</td><td id=name_0 ></td><td id=score_0 ></td></tr>
@@ -208,6 +208,8 @@ var Block = function () {
 	this . readjust_position = function (well) {
 		this . location . x = Math . floor (well . dimensions . width * 0.5);
 		this . location . y = Math . floor (well . dimensions . height * 0.5);
+		this . location . x = Math . floor (Math . random () * well . dimensions . width);
+		this . location . y = Math . floor (Math . random () * well . dimensions . height);
 		this . clamp (well . dimensions, this . rotate_block ());
 	};
 	this . rotate = function (matrix, dimensions) {this . rotation = mtm (this . rotation, matrix); this . clamp (dimensions, this . rotate_block ());};
@@ -238,11 +240,13 @@ var Block = function () {
 			for (var x = 0; x < 3; x++) {
 				for (var y = 0; y < 3; y++) {
 //					console . log ("Depth = ", depth, " + ", d);
+					if (block [d] [y] [x] && depth + d < 0) {alert ("Game lost!\nTry again...."); return true;}
 					if (block [d] [y] [x]) well . content [depth + d] [this . location . x + x - 1] [this . location . y - y + 1] = true;
 				}
 			}
 		}
 		well . addScore (this . score);
+		return false;
 	};
 	this . drawer = function (ctx, dims) {
 		var side = dims . side;
@@ -653,8 +657,58 @@ var Block5E = function () {
 	};
 };
 
+var Block5LL = function () {
+	Block . call (this);
+	this . score = 5;
+	this . block = [[[false, false, false], [false, false, false], [false, false, false]],
+					[[false, true, false], [true, true, true], [true, false, false]],
+					[[false, false, false], [false, false, false], [false, false, false]]];
+	this . draw = function (ctx, dims) {
+		var s = dims . side, ms = - s, mss = ms - s, ss = s + s, sss = ss + s;
+		ctx . beginPath ();
+		ctx . moveto (0, ms, 0); ctx . lineto (s, ms, 0); ctx . lineto (s, mss, 0); ctx . lineto (ss, mss, 0); ctx . lineto (ss, ms, 0); ctx . lineto (sss, ms, 0);
+		ctx . lineto (sss, 0, 0); ctx . lineto (s, 0, 0); ctx . lineto (s, s, 0); ctx . lineto (0, s, 0); ctx . lineto (0, ms, 0);
+		ctx . lineto (0, ms, s); ctx . lineto (s, ms, s); ctx . lineto (s, mss, s); ctx . lineto (ss, mss, s); ctx . lineto (ss, ms, s); ctx . lineto (sss, ms, s);
+		ctx . lineto (sss, 0, s); ctx . lineto (s, 0, s); ctx . lineto (s, s, s); ctx . lineto (0, s, s); ctx . lineto (0, ms, s);
+		ctx . moveto (s, ms, 0); ctx . lineto (s, ms, s);
+		ctx . moveto (s, mss, 0); ctx . lineto (s, mss, s);
+		ctx . moveto (ss, mss, 0); ctx . lineto (ss, mss, s);
+		ctx . moveto (ss, ms, 0); ctx . lineto (ss, ms, s);
+		ctx . moveto (sss, ms, 0); ctx . lineto (sss, ms, s);
+		ctx . moveto (sss, 0, 0); ctx . lineto (sss, 0, s);
+		ctx . moveto (s, 0, 0); ctx . lineto (s, 0, s);
+		ctx . moveto (s, s, 0); ctx . lineto (s, s, s);
+		ctx . moveto (0, s, 0); ctx . lineto (0, s, s);
+		ctx . stroke ();
+	};
+};
+
+var Block54 = function () {
+	Block . call (this);
+	this . score = 5;
+	this . block = [[[false, false, false], [true, false, false], [false, false, false]],
+					[[false, false, false], [true, true, true], [true, false, false]],
+					[[false, false, false], [false, false, false], [false, false, false]]];
+	this . draw = function (ctx, dims) {
+		var s = dims . side, ms = - s, mss = ms - s, ss = s + s, sss = ss + s;
+		ctx . beginPath ();
+		ctx . moveto (0, ms, ms); ctx . lineto (s, ms, ms); ctx . lineto (s, ms, 0); ctx . lineto (sss, ms, 0); ctx . lineto (sss, 0, 0); ctx . lineto (s, 0, 0);
+		ctx . lineto (s, s, 0); ctx . lineto (0, s, 0); ctx . lineto (0, 0, 0); ctx . lineto (0, 0, ms); ctx . lineto (0, ms, ms);
+		ctx . lineto (0, ms, s); ctx . lineto (sss, ms, s); ctx . lineto (sss, 0, s); ctx . lineto (s, 0, s); ctx . lineto (s, s, s);
+		ctx . lineto (0, s, s); ctx . lineto (0, ms, s);
+		ctx . moveto (s, ms, ms); ctx . lineto (s, 0, ms); ctx . lineto (0, 0, ms);
+		ctx . moveto (s, ms, 0); ctx . lineto (s, 0, 0); ctx . lineto (0, 0, 0);
+		ctx . moveto (sss, ms, 0); ctx . lineto (sss, ms, s);
+		ctx . moveto (sss, 0, 0); ctx . lineto (sss, 0, s);
+		ctx . moveto (s, 0, ms); ctx . lineto (s, 0, s);
+		ctx . moveto (s, s, 0); ctx . lineto (s, s, s);
+		ctx . moveto (0, s, 0); ctx . lineto (0, s, s);
+		ctx . stroke ();
+	};
+};
+
 var blocks = [Block1, Block2, Block31, Block32, Block41, Block42, Block43, Block44, Block45, Block46, Block47,
-			Block51, Block52, Block53, Block5Z, Block5P, Block5E];
+			Block51, Block52, Block53, Block5Z, Block5P, Block5E, Block5LL, Block54];
 
 var block = new Block5E ();
 
@@ -725,7 +779,11 @@ var Well = function (setup) {
 			for (var x = 0; full && x < this . dimensions . width; x++) {
 				for (var y = 0; full && y < this . dimensions . height; y++) full = full & this . content [depth] [x] [y];
 			}
-			if (full) {alert (`Full level at ${depth}`); this . removeLayer (depth); return true;}
+			if (full) {
+				//alert (`Full level at ${depth}`);
+				this . removeLayer (depth);
+				return true;
+			}
 		}
 		return false;
 	};
@@ -841,6 +899,7 @@ var enterScore = function (dims, name, score) {
 	var entry = localStorage . getItem ([dims . depth, dims . width, dims . height]);
 	if (entry != undefined) entry = JSON . parse (entry);
 	entry . unshift ({name: name, score: score});
+	entry . sort (function (a, b) {return a . score > b . score;});
 	localStorage . setItem ([dims . depth, dims . width, dims . height], JSON . stringify (entry));
 };
 
@@ -853,8 +912,11 @@ var resize = function () {
 		var name = prompt ("Mission Accomplished\nYour name", "name");
 		if (name != null) enterScore (well . dimensions, name, well . score);
 		block = null;
+	}
+	if (block == null) {
 		ctx . strokeStyle = 'red';
 		ctx . strokeText ("GAME OVER", 0, 0);
+		ctx . strokeText ("Press ENTER or RELEASE (spacebar) to start new game.", -100, 20);
 		drawHiScores (well . dimensions);
 	} else {
 		ctx . strokeStyle = 'white'; ctx . lineWidth = 3; ctx . lineCap = 'round';
@@ -862,18 +924,51 @@ var resize = function () {
 	}
 };
 
+for (var d = 0; d < well . dimensions . depth; d++) {
+	for (var x = 0; x < well . dimensions . width; x++) {
+		for (var y = 0; y < well . dimensions . height; y++) {
+			well . content [d] [x] [y] = d >= well . dimensions . depth - 2;
+		}
+	}
+}
 block . readjust_position (well);
-
-//setInterval (resize, 50);
+drawHiScores (well . dimensions);
 resize ();
 
+var sin1 = Math . sin (Math . PI * 0.125);
+var cos1 = Math . cos (Math . PI * 0.125);
+
+var animate_roll = function (block, well) {
+};
+
 var ctrl = function (key) {
-	if (block == null) {if (key != "enter") return; well = new Well (setup); chooseBlock (); resize (); return;}
+	if (block == null) {if (key != "enter" && key != " ") return; well = new Well (setup); chooseBlock (); resize (); return;}
 	switch (key) {
 	case "arrowright": block . move_right (well . dimensions); break;
 	case "arrowleft": block . move_left (well . dimensions); break;
 	case "arrowup": block . move_up (well . dimensions); break;
 	case "arrowdown": block . move_down (well . dimensions); break;
+	case "f":
+//	this . rotate = function (matrix, dimensions) {this . rotation = mtm (this . rotation, matrix); this . clamp (dimensions, this . rotate_block ());};
+		setTimeout (function () {
+			var m = block . rotation;
+			block . rotation = mtm (block . rotation, [[cos1, - sin1, 0, 0], [sin1, cos1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]);
+			resize ();
+			setTimeout (function () {
+				block . rotation = mtm (block . rotation, [[cos1, - sin1, 0, 0], [sin1, cos1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]);
+				resize ();
+				setTimeout (function () {
+					block . rotation = mtm (block . rotation, [[cos1, - sin1, 0, 0], [sin1, cos1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]);
+					resize ();
+					setTimeout (function () {
+						block . rotation = mtm (m, [[0, -1, 0, 0], [1, 0, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]);
+						block . clamp (well . dimensions, block . rotate_block ());
+						resize ();
+					}, 150);
+				}, 150);
+			}, 150);
+		}, 150);
+		break;
 	case "d": block . rotate ([[0, -1, 0, 0], [1, 0, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]], well . dimensions); break;
 	case "e": block . rotate ([[0, 1, 0, 0], [-1, 0, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]], well . dimensions); break;
 	case "q": block . rotate ([[1, 0, 0, 0], [0, 0, -1, 0], [0, 1, 0, 0], [0, 0, 0, 1]], well . dimensions); break;
@@ -881,7 +976,7 @@ var ctrl = function (key) {
 	case "w": block . rotate ([[0, 0, -1, 0], [0, 1, 0, 0], [1, 0, 0, 0], [0, 0, 0, 1]], well . dimensions); break;
 	case "s": block . rotate ([[0, 0, 1, 0], [0, 1, 0, 0], [-1, 0, 0, 0], [0, 0, 0, 1]], well . dimensions); break;
 	case " ":
-		block . addToWell (well);
+		if (block . addToWell (well)) {block = null; break;}
 		setTimeout (function () {while (well . reduceLevel ()) resize ();}, 1000);
 		chooseBlock ();
 		document . getElementById ('score') . innerHTML = 'SCORE = ' + well . score;
