@@ -707,10 +707,36 @@ var Block54 = function () {
 	};
 };
 
-var blocks = [Block1, Block2, Block31, Block32, Block41, Block42, Block43, Block44, Block45, Block46, Block47,
-			Block51, Block52, Block53, Block5Z, Block5P, Block5E, Block5LL, Block54];
+var Block5S1 = function () {
+	Block . call (this);
+	this . score = 5;
+	this . block = [[[false, false, false], [false, true, false], [false, false, false]],
+					[[true, true, false], [false, true, true], [false, false, false]],
+					[[false, false, false], [false, false, false], [false, false, false]]];
+	this . draw = function (ctx, dims) {
+		var s = dims . side, ms = -s, mss = ms - s, ss = s + s, sss = ss + s;
+		ctx . beginPath ();
+		ctx . moveto (0, mss, 0), ctx . lineto (ss, mss, 0); ctx . lineto (ss, ms, 0); ctx . lineto (sss, ms, 0); ctx . lineto (sss, 0, 0);
+		ctx . lineto (ss, 0, 0), ctx . lineto (ss, 0, ms); ctx . lineto (s, 0, ms); ctx . lineto (s, ms, ms); ctx . lineto (s, ms, 0);
+		ctx . lineto (0, ms, 0); ctx . lineto (0, mss, 0);
+		ctx . lineto (0, mss, s); ctx . lineto (ss, mss, s); ctx . lineto (ss, ms, s); ctx . lineto (sss, ms, s); ctx . lineto (sss, 0, s);
+		ctx . lineto (s, 0, s); ctx . lineto (s, ms, s); ctx . lineto (0, ms, s); ctx . lineto (0, mss, s);
+		ctx . moveto (ss, mss, 0); ctx . lineto (ss, mss, s);
+		ctx . moveto (ss, ms, ms); ctx . lineto (ss, ms, s);
+		ctx . moveto (sss, ms, 0); ctx . lineto (sss, ms, s);
+		ctx . moveto (sss, 0, 0); ctx . lineto (sss, 0, s);
+		ctx . moveto (s, 0, ms); ctx . lineto (s, 0, s);
+		ctx . moveto (0, ms, 0); ctx . lineto (0, ms, s);
+		ctx . moveto (s, ms, ms); ctx . lineto (ss, ms, ms); ctx . lineto (ss, 0, ms);
+		ctx . moveto (s, ms, 0); ctx . lineto (ss, ms, 0); ctx . lineto (ss, 0, 0);
+		ctx . stroke ();
+	};
+};
 
-var block = new Block5E ();
+var blocks = [Block1, Block2, Block31, Block32, Block41, Block42, Block43, Block44, Block45, Block46, Block47,
+			Block51, Block52, Block53, Block5Z, Block5P, Block5E, Block5LL, Block5S1, Block54];
+
+var block = new Block5S1 ();
 
 var chooseBlock = function () {
 	var constructor = blocks [Math . floor (Math . random () * blocks . length)];
@@ -923,7 +949,7 @@ var resize = function () {
 		block . drawer (ctx, well . dimensions);
 	}
 };
-
+/*
 for (var d = 0; d < well . dimensions . depth; d++) {
 	for (var x = 0; x < well . dimensions . width; x++) {
 		for (var y = 0; y < well . dimensions . height; y++) {
@@ -931,6 +957,7 @@ for (var d = 0; d < well . dimensions . depth; d++) {
 		}
 	}
 }
+*/
 block . readjust_position (well);
 drawHiScores (well . dimensions);
 resize ();
