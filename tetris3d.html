@@ -28,7 +28,7 @@
 <head>
 	<title>TETRIS 3D</title>
 	<style>
-	td {padding: 10px;}
+	td {padding: 6px;}
 	</style>
 </head>
 
@@ -51,8 +51,6 @@
 		<br />
 		<input type=button value="MOVE UP (&#x21e7)" style="width: 160px;" onclick="javascript: ctrl ('arrowup');" />
 		<input type=button value="MOVE DOWN (&#x21e9)" style="width: 160px;" onclick="javascript: ctrl ('arrowdown');" />
-		<br />
-		<input type=button value="RELEASE (spacebar)" style="width: 320px;" onclick="javascript: ctrl (' ');" />
 		<div id=score />SCORE</div>
 		<br />
 		BEST (lowest) SCORES
@@ -69,6 +67,7 @@
 			<tr><td>9</td><td id=name_8 ></td><td id=score_8 ></td></tr>
 			<tr><td>10</td><td id=name_9 ></td><td id=score_9 ></td></tr>
 		</table>
+		<input type=button value="RELEASE (spacebar)" style="width: 320px;" onclick="javascript: ctrl (' ');" />
 	</div>
 </body>
 
@@ -998,6 +997,7 @@ var Block5S3 = function () {
 		ctx . moveto (sss, 0, ms); ctx . lineto (sss, 0, s);
 		ctx . moveto (sss, ms, ms); ctx . lineto (sss, ms, s);
 		ctx . moveto (ss, mss, 0); ctx . lineto (ss, mss, s);
+		ctx . moveto (0, mss, 0); ctx . lineto (0, mss, s);
 		ctx . moveto (0, ms, 0); ctx . lineto (0, ms, s);
 		ctx . moveto (s, ms, 0); ctx . lineto (s, ms, s);
 		ctx . moveto (s, 0, 0); ctx . lineto (s, 0, s);
@@ -1037,7 +1037,7 @@ var blocks = [Block1, Block2, Block31, Block32, Block41, Block42, Block43, Block
 			Block5T, Block5F1, Block5F2, Block5BL, Block5L1, Block5L2, Block5M,
 			Block54];
 
-var block = new Block5S4 ();
+var block = new Block5S3 ();
 
 var chooseBlock = function () {
 	var constructor = blocks [Math . floor (Math . random () * blocks . length)];
@@ -1206,9 +1206,12 @@ var Well = function (setup) {
 	this . initialiseContent ();
 	for (var ind = 0; ind < this . random_blocks; ind++) this . insertRandomBlock ();
 	if (this . dimensions . depth > this . colours . length) this . dimensions . depth = this . colours . length;
+	if (this . random_area > this . dimensions . depth) this . random_area = this . dimensions . depth;
 };
 
 var well = new Well (setup);
+
+chooseBlock ();
 
 var drawHiScores = function (dims) {
 	var entry = localStorage . getItem ([dims . depth, dims . width, dims . height]);
