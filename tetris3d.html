@@ -1048,9 +1048,10 @@ var chooseBlock = function () {
 var Well = function (setup) {
 	this . score = 0;
 	this . random_area = 3;
+	this . random_blocks = 32;
 	this . addScore = function (score) {this . score += score;};
 	this . dimensions = {width: 7, height: 7, depth: 12, side: 40};
-	this . colours = ['blue', 'red', 'magenta', 'green', 'cyan', 'yellow', 'gray', 'blue', 'red', 'magenta', 'green', 'cyan', 'yellow', 'gray', 'orange'];
+	this . colours = ['blue', 'red', 'magenta', 'green', 'cyan', 'yellow', 'gray', 'orange', 'silver', 'maroon', 'lime', 'olive', 'aqua', 'fuchsia', 'teal', 'navy', 'purple'];
 	this . content = [];
 	this . initialiseContent = function () {
 		this . content = [];
@@ -1203,7 +1204,8 @@ var Well = function (setup) {
 		else this [key] = setup [key];
 	}
 	this . initialiseContent ();
-	for (var ind = 0; ind < 4; ind++) this . insertRandomBlock ();
+	for (var ind = 0; ind < this . random_blocks; ind++) this . insertRandomBlock ();
+	if (this . dimensions . depth > this . colours . length) this . dimensions . depth = this . colours . length;
 };
 
 var well = new Well (setup);
