@@ -1038,9 +1038,12 @@ var blocks = [Block1, Block2, Block31, Block32, Block41, Block42, Block43, Block
 			Block54];
 
 var block = new Block5S3 ();
+var block_number = 0;
 
-var chooseBlock = function () {
-	var constructor = blocks [Math . floor (Math . random () * blocks . length)];
+var chooseBlock = function (blocks, id) {
+	if (id != undefined) block_number = id;
+	else block_number = Math . floor (Math . random () * blocks . length);
+	var constructor = blocks [block_number];
 	block = new constructor ();
 	block . readjust_position (well);
 };
@@ -1211,15 +1214,15 @@ var Well = function (setup) {
 
 var well = new Well (setup);
 
-chooseBlock ();
+chooseBlock (blocks);
 
 var drawHiScores = function (dims) {
-	var entry = localStorage . getItem ([dims . depth, dims . width, dims . height]);
+	var entry = localStorage . getItem (['scores', dims . depth, dims . width, dims . height]);
 	if (entry != undefined) entry = JSON . parse (entry);
 	else {
 		entry = [];
 		for (var ind = 0; ind < 10; ind++) entry . push ({name: '---', score: '---'});
-		localStorage . setItem ([dims . depth, dims . width, dims . height], JSON . stringify (entry));
+		localStorage . setItem (['scores', dims . depth, dims . width, dims . height], JSON . stringify (entry));
 	}
 	for (var ind = 0; ind < 10; ind++) {
 		document . getElementById ('name_' + ind) . innerHTML = entry [ind] . name;
@@ -1228,11 +1231,26 @@ var drawHiScores = function (dims) {
 };
 
 var enterScore = function (dims, name, score) {
-	var entry = localStorage . getItem ([dims . depth, dims . width, dims . height]);
+	var entry = localStorage . getItem (['scores', dims . depth, dims . width, dims . height]);
 	if (entry != undefined) entry = JSON . parse (entry);
 	entry . unshift ({name: name, score: score});
 	entry . sort (function (a, b) {return a . score > b . score;});
-	localStorage . setItem ([dims . depth, dims . width, dims . height], JSON . stringify (entry));
+	localStorage . setItem (['scores', dims . depth, dims . width, dims . height], JSON . stringify (entry));
+};
+
+var saveGame = function () {
+	var payload = {block_number: block_number, score: well . score, content: well . content};
+	payload = JSON . stringify (payload);
+	localStorage . setItem (['save_game', well . dimensions . depth, well . dimensions . width, well . dimensions . height], payload);
+};
+
+var loadGame = function () {
+	var payload = localStorage . getItem (['save_game', well . dimensions . depth, well . dimensions . width, well . dimensions . height]);
+	if (payload == undefined) return;
+	payload = JSON . parse (payload);
+	chooseBlock (blocks, payload . block_number);
+	well . score = payload . score;
+	well . content = payload . content;
 };
 
 var resize = function () {
@@ -1244,6 +1262,7 @@ var resize = function () {
 		var name = prompt ("Mission Accomplished\nYour name", "name");
 		if (name != null) enterScore (well . dimensions, name, well . score);
 		block = null;
+		localStorage . removeItem (['save_game', well . dimensions . depth, well . dimensions . width, well . dimensions . height]);
 	}
 	if (block == null) {
 		ctx . strokeStyle = 'red';
@@ -1264,7 +1283,9 @@ for (var d = 0; d < well . dimensions . depth; d++) {
 	}
 }
 */
-block . readjust_position (well);
+//block . readjust_position (well);
+loadGame ();
+document . getElementById ('score') . innerHTML = 'SCORE = ' + well . score;
 drawHiScores (well . dimensions);
 resize ();
 
@@ -1275,7 +1296,7 @@ var animate_roll = function (block, well) {
 };
 
 var ctrl = function (key) {
-	if (block == null) {if (key != "enter" && key != " ") return; well = new Well (setup); chooseBlock (); resize (); return;}
+	if (block == null) {if (key != "enter" && key != " ") return; well = new Well (setup); chooseBlock (blocks); resize (); return;}
 	switch (key) {
 	case "arrowright": block . move_right (well . dimensions); break;
 	case "arrowleft": block . move_left (well . dimensions); break;
@@ -1311,13 +1332,14 @@ var ctrl = function (key) {
 	case " ":
 		if (block . addToWell (well)) {block = null; break;}
 		setTimeout (function () {while (well . reduceLevel ()) resize ();}, 1000);
-		chooseBlock ();
+		chooseBlock (blocks);
 		document . getElementById ('score') . innerHTML = 'SCORE = ' + well . score;
 		break;
 	case "enter": block . level (well); break;
 	default: break;
 	}
 	resize ();
+	saveGame ();
 };
 
 </script>
