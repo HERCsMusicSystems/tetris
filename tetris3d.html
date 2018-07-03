@@ -1055,6 +1055,7 @@ var Well = function (setup) {
 	this . addScore = function (score) {this . score += score;};
 	this . save_game = 'save_game';
 	this . save_scores = 'scores';
+	this . id = 'default';
 	this . dimensions = {width: 7, height: 7, depth: 12, side: 40};
 	this . colours = ['blue', 'red', 'magenta', 'green', 'cyan', 'yellow', 'gray', 'orange', 'silver', 'maroon', 'lime', 'olive', 'aqua', 'fuchsia', 'teal', 'navy', 'purple'];
 	this . content = [];
@@ -1219,12 +1220,12 @@ var well = new Well (setup);
 chooseBlock (blocks);
 
 var drawHiScores = function (dims) {
-	var entry = localStorage . getItem ([well . save_scores, dims . depth, dims . width, dims . height]);
+	var entry = localStorage . getItem ([well . save_scores, well . id, dims . depth, dims . width, dims . height]);
 	if (entry != undefined) entry = JSON . parse (entry);
 	else {
 		entry = [];
 		for (var ind = 0; ind < 10; ind++) entry . push ({name: '---', score: '---'});
-		localStorage . setItem ([well . save_scores, dims . depth, dims . width, dims . height], JSON . stringify (entry));
+		localStorage . setItem ([well . save_scores, well . id, dims . depth, dims . width, dims . height], JSON . stringify (entry));
 	}
 	for (var ind = 0; ind < 10; ind++) {
 		document . getElementById ('name_' + ind) . innerHTML = entry [ind] . name;
@@ -1233,21 +1234,21 @@ var drawHiScores = function (dims) {
 };
 
 var enterScore = function (dims, name, score) {
-	var entry = localStorage . getItem ([well . save_scores, dims . depth, dims . width, dims . height]);
+	var entry = localStorage . getItem ([well . save_scores, well . id, dims . depth, dims . width, dims . height]);
 	if (entry != undefined) entry = JSON . parse (entry);
 	entry . unshift ({name: name, score: score});
 	entry . sort (function (a, b) {return a . score > b . score;});
-	localStorage . setItem ([well . save_scores, dims . depth, dims . width, dims . height], JSON . stringify (entry));
+	localStorage . setItem ([well . save_scores, well . id, dims . depth, dims . width, dims . height], JSON . stringify (entry));
 };
 
 var saveGame = function () {
 	var payload = {block_number: block_number, score: well . score, content: well . content};
 	payload = JSON . stringify (payload);
-	localStorage . setItem ([well . save_game, well . dimensions . depth, well . dimensions . width, well . dimensions . height], payload);
+	localStorage . setItem ([well . save_game, well . id, well . dimensions . depth, well . dimensions . width, well . dimensions . height], payload);
 };
 
 var loadGame = function () {
-	var payload = localStorage . getItem ([well . save_game, well . dimensions . depth, well . dimensions . width, well . dimensions . height]);
+	var payload = localStorage . getItem ([well . save_game, well . id, well . dimensions . depth, well . dimensions . width, well . dimensions . height]);
 	if (payload == undefined) return;
 	payload = JSON . parse (payload);
 	chooseBlock (blocks, payload . block_number);
@@ -1264,7 +1265,7 @@ var resize = function () {
 		var name = prompt ("Mission Accomplished\nYour name", "name");
 		if (name != null) enterScore (well . dimensions, name, well . score);
 		block = null;
-		localStorage . removeItem (['save_game', well . dimensions . depth, well . dimensions . width, well . dimensions . height]);
+		localStorage . removeItem ([well . save_game, well . id, well . dimensions . depth, well . dimensions . width, well . dimensions . height]);
 	}
 	if (block == null) {
 		ctx . strokeStyle = 'red';
