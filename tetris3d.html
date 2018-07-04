@@ -1280,7 +1280,7 @@ var Well = function (setup) {
 
 var well = new Well (setup);
 
-chooseBlock (blocks);
+chooseBlock (block_matrix [well . id]);
 
 var drawHiScores = function (dims) {
 	var entry = localStorage . getItem ([well . save_scores, well . id, dims . depth, dims . width, dims . height]);
@@ -1314,7 +1314,7 @@ var loadGame = function () {
 	var payload = localStorage . getItem ([well . save_game, well . id, well . dimensions . depth, well . dimensions . width, well . dimensions . height]);
 	if (payload == undefined) return;
 	payload = JSON . parse (payload);
-	chooseBlock (blocks, payload . block_number);
+	chooseBlock (block_matrix [well . id], payload . block_number);
 	well . score = payload . score;
 	well . content = payload . content;
 };
@@ -1362,7 +1362,7 @@ var animate_roll = function (block, well) {
 };
 
 var ctrl = function (key) {
-	if (block == null) {if (key != "enter" && key != " ") return; well = new Well (setup); chooseBlock (blocks); resize (); return;}
+	if (block == null) {if (key != "enter" && key != " ") return; well = new Well (setup); chooseBlock (block_matrix [well . id]); resize (); return;}
 	switch (key) {
 	case "arrowright": block . move_right (well . dimensions); break;
 	case "arrowleft": block . move_left (well . dimensions); break;
@@ -1398,7 +1398,7 @@ var ctrl = function (key) {
 	case " ":
 		if (block . addToWell (well)) {block = null; break;}
 		setTimeout (function () {while (well . reduceLevel ()) resize ();}, 1000);
-		chooseBlock (blocks);
+		chooseBlock (block_matrix [well . id]);
 		document . getElementById ('score') . innerHTML = 'SCORE = ' + well . score;
 		break;
 	case "enter": block . level (well); break;
