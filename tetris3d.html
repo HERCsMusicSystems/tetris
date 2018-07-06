@@ -32,7 +32,7 @@
 	</style>
 </head>
 
-<body bgcolor=black style = "margin: 0;" onkeydown="javascript: ctrl (event . key . toLowerCase ());" >
+<body bgcolor=black style = "margin: 0;" onkeydown="javascript: return ctrl (event . key . toLowerCase ());" >
 	<div>
 		<canvas id=tetris />
 	</div>
@@ -1083,20 +1083,44 @@ var blocks_2 = [Block1, Block2];
 var blocks_32 = [Block1, Block2, Block32];
 var blocks_3 = [Block1, Block2, Block31, Block32];
 var blocks_4 = [Block1, Block2, Block31, Block32, Block41, Block42, Block43, Block44, Block45, Block46, Block47];
+var flat = [
+	Block1, Block2, Block31, Block32,
+	Block41, Block42, Block43, Block46,
+	Block5Z, Block5P, Block5E, Block5LL, Block5T, Block5F1, Block5BL, Block5M
+];
+
+var balanced = [
+	Block1, Block2, Block31, Block32, Block41, Block42, Block43, Block44, Block46, // X2
+	Block1, Block2, Block31, Block32, Block41, Block42, Block43, Block44, Block46, // X2
+	Block45, Block47, // X 1
+	Block51, Block52, // X 1
+	Block53, Block54, // X 2
+	Block53, Block54, // X 2
+	Block5Z, // X 2
+	Block5Z, // X 2
+	Block5Z1, Block5Z2, // X 1
+	Block5P, Block5E, Block5LL, // X 2
+	Block5P, Block5E, Block5LL, // X 2
+	Block5S1, Block5S2, Block5S3, Block5S4, Block5SP1, Block5SP2, // X 1
+	Block5T, Block5F1, Block5F2, Block5BL, Block5M, // X 2
+	Block5T, Block5F1, Block5F2, Block5BL, Block5M, // X 2
+	Block5L1, Block5L2, // X 1
+];
 
 var all_blocks = [Block1, Block2, Block31, Block32, Block41, Block42, Block43, Block44, Block45, Block46, Block47,
 			Block51, Block52, Block53, Block5Z, Block5Z1, Block5Z2, Block5P, Block5E, Block5LL,
 			Block5S1, Block5S2, Block5S3, Block5S4,
 			Block5T, Block5F1, Block5F2, Block5BL, Block5L1, Block5L2, Block5M,
-			Block54];
+			Block54, Block5SP1, Block5SP2];
 
 var blocks = [Block1, Block2, Block31, Block32, Block41, Block42, Block43, Block44, Block45, Block46, Block47,
 			Block51, Block52, Block53, Block5Z, Block5Z1, Block5Z2, Block5P, Block5E, Block5LL,
 			Block5S1, Block5S2, Block5S3, Block5S4,
 			Block5T, Block5F1, Block5F2, Block5BL, Block5L1, Block5L2, Block5M,
-			Block54, Block5SP1];
+			Block54, Block5SP1, Block5SP2];
 
-var block_matrix = {blocks_2: blocks_2, blocks_32: blocks_32, blocks_3: blocks_3, blocks_4: blocks_4, all_blocks: all_blocks, default: all_blocks};
+var block_matrix = {blocks_2: blocks_2, blocks_32: blocks_32, blocks_3: blocks_3, blocks_4: blocks_4, all_blocks: all_blocks,
+				default: all_blocks, flat: flat, balanced: balanced};
 
 var block = null;
 var block_number = 0;
@@ -1362,7 +1386,7 @@ var animate_roll = function (block, well) {
 };
 
 var ctrl = function (key) {
-	if (block == null) {if (key != "enter" && key != " ") return; well = new Well (setup); chooseBlock (block_matrix [well . id]); resize (); return;}
+	if (block == null) {if (key != "enter" && key != " ") return true; well = new Well (setup); chooseBlock (block_matrix [well . id]); resize (); return false;}
 	switch (key) {
 	case "arrowright": block . move_right (well . dimensions); break;
 	case "arrowleft": block . move_left (well . dimensions); break;
@@ -1402,10 +1426,11 @@ var ctrl = function (key) {
 		document . getElementById ('score') . innerHTML = 'SCORE = ' + well . score;
 		break;
 	case "enter": block . level (well); break;
-	default: break;
+	default: return true; break;
 	}
 	resize ();
 	saveGame ();
+	return false;
 };
 
 </script>
