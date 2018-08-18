@@ -1079,6 +1079,29 @@ var Block5SP2 = function () {
 	};
 };
 
+var Block5TE = function () {
+	Block . call (this);
+	this . score = 5;
+	this . block = [[[false, false, false], [true, true, false], [false, false, false]],
+					[[false, true, false], [false, true, false], [false, true, false]],
+					[[false, false, false], [false, false, false], [false, false, false]]];
+	this . draw = function (ctx, dims) {
+		var s = dims . side, ms = -s, mss = ms - s, ss = s + s, sss = ss + s;
+		ctx . beginPath ();
+		ctx . moveto (ss, mss, 0); ctx . lineto (ss, mss, s); ctx . lineto (ss, s, s); ctx . lineto (ss, s, 0);
+		ctx . lineto (ss, 0, 0); ctx . lineto (ss, 0, ms); ctx . lineto (ss, ms, ms); ctx . lineto (ss, ms, 0); ctx . lineto (ss, mss, 0);
+		ctx . lineto (s, mss, 0); ctx . lineto (s, mss, s); ctx . lineto (s, s, s); ctx . lineto (s, s, 0); ctx . lineto (s, mss, 0);
+		ctx . moveto (s, mss, s); ctx . lineto (ss, mss, s);
+		ctx . moveto (s, s, s); ctx . lineto (ss, s, s);
+		ctx . moveto (s, s, 0); ctx . lineto (ss, s, 0);
+		ctx . moveto (ss, ms, 0); ctx . lineto (0, ms, 0); ctx . lineto (0, ms, ms); ctx . lineto (ss, ms, ms);
+		ctx . moveto (ss, 0, 0); ctx . lineto (0, 0, 0); ctx . lineto (0, 0, ms); ctx . lineto (ss, 0, ms);
+		ctx . moveto (0, ms, 0); ctx . lineto (0, 0, 0);
+		ctx . moveto (0, ms, ms); ctx . lineto (0, 0, ms);
+		ctx . stroke ();
+	};
+};
+
 var blocks_2 = [Block1, Block2];
 var blocks_32 = [Block1, Block2, Block32];
 var blocks_3 = [Block1, Block2, Block31, Block32];
@@ -1105,19 +1128,20 @@ var balanced = [
 	Block5T, Block5F1, Block5F2, Block5BL, Block5M, // X 2
 	Block5T, Block5F1, Block5F2, Block5BL, Block5M, // X 2
 	Block5L1, Block5L2, // X 1
+	Block5TE
 ];
 
 var all_blocks = [Block1, Block2, Block31, Block32, Block41, Block42, Block43, Block44, Block45, Block46, Block47,
 			Block51, Block52, Block53, Block5Z, Block5Z1, Block5Z2, Block5P, Block5E, Block5LL,
 			Block5S1, Block5S2, Block5S3, Block5S4,
 			Block5T, Block5F1, Block5F2, Block5BL, Block5L1, Block5L2, Block5M,
-			Block54, Block5SP1, Block5SP2];
+			Block54, Block5SP1, Block5SP2, Block5TE];
 
 var blocks = [Block1, Block2, Block31, Block32, Block41, Block42, Block43, Block44, Block45, Block46, Block47,
 			Block51, Block52, Block53, Block5Z, Block5Z1, Block5Z2, Block5P, Block5E, Block5LL,
 			Block5S1, Block5S2, Block5S3, Block5S4,
 			Block5T, Block5F1, Block5F2, Block5BL, Block5L1, Block5L2, Block5M,
-			Block54, Block5SP1, Block5SP2];
+			Block54, Block5SP1, Block5SP2, Block5TE];
 
 var block_matrix = {blocks_2: blocks_2, blocks_32: blocks_32, blocks_3: blocks_3, blocks_4: blocks_4, all_blocks: all_blocks,
 				default: all_blocks, flat: flat, balanced: balanced};
